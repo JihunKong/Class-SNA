@@ -719,9 +719,9 @@ def show_analysis_results():
                 st.session_state.page = 'upload'
                 st.rerun()
                 
-            # 하단에 Made by TechKwon 추가
+            # 하단에 Made by G.E.N.I.U.S 연구회 추가
             st.markdown("---")
-            st.markdown("<div style='text-align: center; color: #888;'>Made by TechKwon</div>", unsafe_allow_html=True)
+            st.markdown("<div style='text-align: center; color: #888;'>Made by G.E.N.I.U.S 연구회</div>", unsafe_allow_html=True)
         
         # 상단 메뉴 탭
         tab1, tab2, tab3, tab4, tab5 = st.tabs([
