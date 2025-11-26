@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+
+{% block title %}설문 - {{ classroom.name }}{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto">
+    <div class="glass-card fade-in">
+        <div class="text-center mb-8">
+            <h1 class="text-2xl font-bold text-white mb-2">{{ classroom.name }} 설문</h1>
+            <p class="text-white/60">{{ student.name }}님, 아래 질문에 답해주세요</p>
+        </div>
+
+        <form id="survey-form" class="space-y-8">
+            <!-- 질문 1: 친한 친구 -->
+            <div class="survey-question">
+                <h3 class="text-lg font-medium text-white mb-4">
+                    <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-blue-500/30 text-blue-300 text-sm mr-2">1</span>
+                    친하게 지내고 싶은 친구를 선택해주세요 (최대 5명)
+                </h3>
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+                    {% for s in other_students %}
+                    <label class="cursor-pointer">
+                        <input type="checkbox" name="friends" value="{{ s.id }}" class="hidden peer friend-checkbox">
+                        <div class="p-3 rounded-lg bg-white/5 border border-white/10 text-center text-sm transition-all peer-checked:bg-blue-500/30 peer-checked:border-blue-400 hover:bg-white/10">
+                            {{ s.name }}
+                        </div>
+                    </label>
+                    {% endfor %}
+                </div>
+                <p class="text-white/40 text-sm mt-2">선택된 친구: <span id="friend-count">0</span>/5</p>
+            </div>
+
+            <!-- 질문 2: 도움을 주는 친구 -->
+            <div class="survey-question">
+                <h3 class="text-lg font-medium text-white mb-4">
+                    <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-green-500/30 text-green-300 text-sm mr-2">2</span>
+                    공부나 과제할 때 도움을 주는 친구를 선택해주세요 (최대 3명)
+                </h3>
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+                    {% for s in other_students %}
+                    <label class="cursor-pointer">
+                        <input type="checkbox" name="helpers" value="{{ s.id }}" class="hidden peer helper-checkbox">
+                        <div class="p-3 rounded-lg bg-white/5 border border-white/10 text-center text-sm transition-all peer-checked:bg-green-500/30 peer-checked:border-green-400 hover:bg-white/10">
+                            {{ s.name }}
+                        </div>
+                    </label>
+                    {% endfor %}
+                </div>
+                <p class="text-white/40 text-sm mt-2">선택된 친구: <span id="helper-count">0</span>/3</p>
+            </div>
+
+            <!-- 질문 3: 함께 활동하고 싶은 친구 -->
+            <div class="survey-question">
+                <h3 class="text-lg font-medium text-white mb-4">
+                    <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-purple-500/30 text-purple-300 text-sm mr-2">3</span>
+                    모둠 활동을 함께 하고 싶은 친구를 선택해주세요 (최대 3명)
+                </h3>
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+                    {% for s in other_students %}
+                    <label class="cursor-pointer">
+                        <input type="checkbox" name="teammates" value="{{ s.id }}" class="hidden peer teammate-checkbox">
+                        <div class="p-3 rounded-lg bg-white/5 border border-white/10 text-center text-sm transition-all peer-checked:bg-purple-500/30 peer-checked:border-purple-400 hover:bg-white/10">
+                            {{ s.name }}
+                        </div>
+                    </label>
+                    {% endfor %}
+                </div>
+                <p class="text-white/40 text-sm mt-2">선택된 친구: <span id="teammate-count">0</span>/3</p>
+            </div>
+
+            <div class="pt-6 border-t border-white/10">
+                <button type="submit" class="glass-btn-primary w-full py-4 text-lg">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    설문 제출하기
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // 체크박스 제한
+    function limitCheckboxes(className, max, counterId) {
+        const checkboxes = document.querySelectorAll('.' + className);
+        const counter = document.getElementById(counterId);
+
+        checkboxes.forEach(cb => {
+            cb.addEventListener('change', function() {
+                const checked = document.querySelectorAll('.' + className + ':checked');
+                counter.textContent = checked.length;
+
+                if (checked.length >= max) {
+                    checkboxes.forEach(c => {
+                        if (!c.checked) c.disabled = true;
+                    });
+                } else {
+                    checkboxes.forEach(c => c.disabled = false);
+                }
+            });
+        });
+    }
+
+    limitCheckboxes('friend-checkbox', 5, 'friend-count');
+    limitCheckboxes('helper-checkbox', 3, 'helper-count');
+    limitCheckboxes('teammate-checkbox', 3, 'teammate-count');
+
+    // 폼 제출
+    document.getElementById('survey-form').addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const friends = Array.from(document.querySelectorAll('.friend-checkbox:checked')).map(c => c.value);
+        const helpers = Array.from(document.querySelectorAll('.helper-checkbox:checked')).map(c => c.value);
+        const teammates = Array.from(document.querySelectorAll('.teammate-checkbox:checked')).map(c => c.value);
+
+        if (friends.length === 0 && helpers.length === 0 && teammates.length === 0) {
+            alert('최소 한 개 이상의 항목에 답해주세요.');
+            return;
+        }
+
+        showLoading();
+
+        try {
+            const response = await fetch('{{ url_for("student.submit_survey", code=classroom.code) }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    friends: friends,
+                    helpers: helpers,
+                    teammates: teammates
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                window.location.href = data.redirect;
+            } else {
+                alert(data.error || '제출 중 오류가 발생했습니다.');
+            }
+        } catch (error) {
+            alert('제출 중 오류가 발생했습니다.');
+        } finally {
+            hideLoading();
+        }
+    });
+</script>
+{% endblock %}

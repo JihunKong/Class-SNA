@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}학급 참여{% endblock %}
+
+{% block content %}
+<div class="min-h-[70vh] flex items-center justify-center">
+    <div class="glass-card max-w-md w-full fade-in">
+        <div class="text-center mb-8">
+            <div class="w-16 h-16 bg-gradient-to-br from-primary-400 to-secondary-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+                </svg>
+            </div>
+            <h1 class="text-2xl font-bold text-white mb-2">학급 참여</h1>
+            <p class="text-white/60">선생님이 알려주신 학급 코드를 입력하세요</p>
+        </div>
+
+        <form method="POST" action="{{ url_for('student.join') }}" class="space-y-6">
+            <div>
+                <label for="code" class="block text-sm font-medium text-white/80 mb-2">학급 코드</label>
+                <input
+                    type="text"
+                    id="code"
+                    name="code"
+                    class="glass-input w-full text-center text-2xl tracking-widest uppercase"
+                    placeholder="예: ABC123"
+                    maxlength="6"
+                    required
+                    autocomplete="off"
+                    autofocus
+                >
+                <p class="mt-2 text-sm text-white/50">6자리 영문/숫자 코드</p>
+            </div>
+
+            <button type="submit" class="glass-btn-primary w-full py-3">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                참여하기
+            </button>
+        </form>
+
+        <div class="mt-6 pt-6 border-t border-white/10 text-center">
+            <p class="text-white/50 text-sm">학급 코드가 없으신가요?</p>
+            <p class="text-white/70 text-sm mt-1">선생님께 문의해주세요.</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 자동 대문자 변환
+    document.getElementById('code').addEventListener('input', function(e) {
+        e.target.value = e.target.value.toUpperCase();
+    });
+</script>
+{% endblock %}

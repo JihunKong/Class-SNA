@@ -1,0 +1,301 @@
+{% extends "base.html" %}
+
+{% block title %}데이터 업로드{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <h1 class="text-3xl font-bold text-white mb-2">데이터 업로드</h1>
+    <p class="text-white/60 mb-8">설문조사 데이터를 업로드하여 네트워크 분석을 시작하세요.</p>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- 구글 시트 입력 -->
+        <div class="glass-card">
+            <div class="flex items-center gap-3 mb-6">
+                <div class="w-10 h-10 bg-green-500/30 rounded-lg flex items-center justify-center">
+                    <svg class="w-6 h-6 text-green-400" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19.5 3h-15A1.5 1.5 0 003 4.5v15A1.5 1.5 0 004.5 21h15a1.5 1.5 0 001.5-1.5v-15A1.5 1.5 0 0019.5 3zm-9 15h-6v-3h6v3zm0-4.5h-6v-3h6v3zm0-4.5h-6v-3h6v3zm9 9h-6v-3h6v3zm0-4.5h-6v-3h6v3zm0-4.5h-6v-3h6v3z"/>
+                    </svg>
+                </div>
+                <h2 class="text-xl font-semibold text-white">구글 시트 URL</h2>
+            </div>
+
+            <form id="sheet-form" class="space-y-4">
+                <div>
+                    <label class="block text-white/80 text-sm mb-2">시트 URL</label>
+                    <input type="url" id="sheet-url" name="sheet_url"
+                           class="glass-input"
+                           placeholder="https://docs.google.com/spreadsheets/d/..."
+                           required>
+                    <p class="text-white/50 text-xs mt-2">공개 설정된 구글 시트 URL을 입력하세요.</p>
+                </div>
+                <button type="submit" class="glass-btn-primary w-full py-3">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
+                    </svg>
+                    불러오기
+                </button>
+            </form>
+        </div>
+
+        <!-- 파일 업로드 -->
+        <div class="glass-card">
+            <div class="flex items-center gap-3 mb-6">
+                <div class="w-10 h-10 bg-blue-500/30 rounded-lg flex items-center justify-center">
+                    <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                    </svg>
+                </div>
+                <h2 class="text-xl font-semibold text-white">파일 업로드</h2>
+            </div>
+
+            <form id="file-form" enctype="multipart/form-data" class="space-y-4">
+                <div id="drop-zone" class="border-2 border-dashed border-white/30 rounded-xl p-8 text-center cursor-pointer hover:border-primary-400 transition-colors">
+                    <svg class="w-12 h-12 text-white/40 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                    <p class="text-white/60 mb-2">파일을 드래그하거나 클릭하여 선택</p>
+                    <p class="text-white/40 text-sm">CSV, Excel 파일 지원</p>
+                    <input type="file" id="file-input" name="file"
+                           class="hidden"
+                           accept=".csv,.xlsx,.xls">
+                </div>
+                <div id="file-info" class="hidden">
+                    <div class="flex items-center gap-3 p-3 bg-white/10 rounded-lg">
+                        <svg class="w-8 h-8 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        <div class="flex-1">
+                            <p id="file-name" class="text-white font-medium"></p>
+                            <p id="file-size" class="text-white/50 text-sm"></p>
+                        </div>
+                        <button type="button" id="clear-file" class="text-white/50 hover:text-white">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <button type="submit" class="glass-btn-primary w-full py-3" disabled id="upload-btn">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
+                    </svg>
+                    업로드 및 분석
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 예시 데이터 -->
+    <div class="glass-card mt-6">
+        <h3 class="text-lg font-semibold text-white mb-4">예시 데이터로 시작하기</h3>
+        <p class="text-white/60 text-sm mb-4">처음이시라면 예시 데이터로 기능을 체험해보세요.</p>
+        <div class="flex flex-wrap gap-4">
+            <button onclick="loadExample(1)" class="glass-btn">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m9 5.197H9"/>
+                </svg>
+                예시 1: 친구 관계
+            </button>
+            <button onclick="loadExample(2)" class="glass-btn">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                </svg>
+                예시 2: 협업 선호도
+            </button>
+        </div>
+    </div>
+
+    <!-- 데이터 형식 안내 -->
+    <div class="glass-card mt-6">
+        <h3 class="text-lg font-semibold text-white mb-4">데이터 형식 안내</h3>
+        <div class="overflow-x-auto">
+            <table class="glass-table text-sm">
+                <thead>
+                    <tr>
+                        <th>타임스탬프</th>
+                        <th>이름</th>
+                        <th>좋아하는 친구</th>
+                        <th>함께 공부하고 싶은 친구</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>2024-01-01</td>
+                        <td>김철수</td>
+                        <td>홍길동;이영희</td>
+                        <td>박지성</td>
+                    </tr>
+                    <tr>
+                        <td>2024-01-02</td>
+                        <td>홍길동</td>
+                        <td>김철수</td>
+                        <td>김철수;최민수</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <p class="text-white/50 text-sm mt-4">
+            * 여러 명을 선택한 경우 세미콜론(;)으로 구분합니다.
+        </p>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const dropZone = document.getElementById('drop-zone');
+    const fileInput = document.getElementById('file-input');
+    const fileInfo = document.getElementById('file-info');
+    const fileName = document.getElementById('file-name');
+    const fileSize = document.getElementById('file-size');
+    const uploadBtn = document.getElementById('upload-btn');
+    const clearFile = document.getElementById('clear-file');
+
+    // 드래그 앤 드롭
+    dropZone.addEventListener('click', () => fileInput.click());
+
+    dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('border-primary-400', 'bg-white/5');
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+        dropZone.classList.remove('border-primary-400', 'bg-white/5');
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('border-primary-400', 'bg-white/5');
+        const files = e.dataTransfer.files;
+        if (files.length) {
+            fileInput.files = files;
+            handleFileSelect(files[0]);
+        }
+    });
+
+    fileInput.addEventListener('change', (e) => {
+        if (e.target.files.length) {
+            handleFileSelect(e.target.files[0]);
+        }
+    });
+
+    function handleFileSelect(file) {
+        fileName.textContent = file.name;
+        fileSize.textContent = formatFileSize(file.size);
+        fileInfo.classList.remove('hidden');
+        dropZone.classList.add('hidden');
+        uploadBtn.disabled = false;
+    }
+
+    clearFile.addEventListener('click', () => {
+        fileInput.value = '';
+        fileInfo.classList.add('hidden');
+        dropZone.classList.remove('hidden');
+        uploadBtn.disabled = true;
+    });
+
+    function formatFileSize(bytes) {
+        if (bytes < 1024) return bytes + ' B';
+        if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+        return (bytes / 1048576).toFixed(1) + ' MB';
+    }
+
+    // 구글 시트 폼 제출
+    document.getElementById('sheet-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const url = document.getElementById('sheet-url').value;
+
+        showLoading();
+        try {
+            const response = await fetch('/api/sheet', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url })
+            });
+            const data = await response.json();
+
+            if (data.success) {
+                // 분석 실행
+                const analyzeResponse = await fetch('/api/analyze', { method: 'POST' });
+                const analyzeData = await analyzeResponse.json();
+
+                if (analyzeData.success) {
+                    window.location.href = '{{ url_for("analysis.dashboard") }}';
+                } else {
+                    alert(analyzeData.error || '분석 중 오류가 발생했습니다.');
+                }
+            } else {
+                alert(data.error || '데이터 로드 중 오류가 발생했습니다.');
+            }
+        } catch (error) {
+            alert('요청 처리 중 오류가 발생했습니다.');
+            console.error(error);
+        } finally {
+            hideLoading();
+        }
+    });
+
+    // 파일 업로드 폼 제출
+    document.getElementById('file-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData();
+        formData.append('file', fileInput.files[0]);
+
+        showLoading();
+        try {
+            const response = await fetch('/api/upload', {
+                method: 'POST',
+                body: formData
+            });
+            const data = await response.json();
+
+            if (data.success) {
+                // 분석 실행
+                const analyzeResponse = await fetch('/api/analyze', { method: 'POST' });
+                const analyzeData = await analyzeResponse.json();
+
+                if (analyzeData.success) {
+                    window.location.href = '{{ url_for("analysis.dashboard") }}';
+                } else {
+                    alert(analyzeData.error || '분석 중 오류가 발생했습니다.');
+                }
+            } else {
+                alert(data.error || '업로드 중 오류가 발생했습니다.');
+            }
+        } catch (error) {
+            alert('요청 처리 중 오류가 발생했습니다.');
+            console.error(error);
+        } finally {
+            hideLoading();
+        }
+    });
+
+    // 예시 데이터 로드
+    async function loadExample(num) {
+        showLoading();
+        try {
+            const response = await fetch(`/api/examples/${num}`, { method: 'POST' });
+            const data = await response.json();
+
+            if (data.success) {
+                // 분석 실행
+                const analyzeResponse = await fetch('/api/analyze', { method: 'POST' });
+                const analyzeData = await analyzeResponse.json();
+
+                if (analyzeData.success) {
+                    window.location.href = '{{ url_for("analysis.dashboard") }}';
+                } else {
+                    alert(analyzeData.error || '분석 중 오류가 발생했습니다.');
+                }
+            } else {
+                alert(data.error || '예시 데이터 로드 중 오류가 발생했습니다.');
+            }
+        } catch (error) {
+            alert('요청 처리 중 오류가 발생했습니다.');
+            console.error(error);
+        } finally {
+            hideLoading();
+        }
+    }
+</script>
+{% endblock %}

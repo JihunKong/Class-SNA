@@ -1,0 +1,335 @@
+{% extends "base.html" %}
+
+{% block title %}분석 대시보드{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- 헤더 -->
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+            <h1 class="text-3xl font-bold text-white">분석 대시보드</h1>
+            <p class="text-white/60 mt-1">학급 관계 네트워크 분석 결과</p>
+        </div>
+        <div class="flex gap-3">
+            <a href="{{ url_for('api.export_data', format='excel') }}" class="glass-btn">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                </svg>
+                Excel 내보내기
+            </a>
+            <a href="{{ url_for('views.upload') }}" class="glass-btn-outline">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                </svg>
+                새 분석
+            </a>
+        </div>
+    </div>
+
+    <!-- 통계 카드 -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="stat-card fade-in">
+            <div class="stat-icon bg-blue-500/30">
+                <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+                </svg>
+            </div>
+            <div class="stat-value" id="node-count">-</div>
+            <div class="stat-label">학생 수</div>
+        </div>
+        <div class="stat-card fade-in" style="animation-delay: 0.1s;">
+            <div class="stat-icon bg-green-500/30">
+                <svg class="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
+                </svg>
+            </div>
+            <div class="stat-value" id="edge-count">-</div>
+            <div class="stat-label">연결 수</div>
+        </div>
+        <div class="stat-card fade-in" style="animation-delay: 0.2s;">
+            <div class="stat-icon bg-purple-500/30">
+                <svg class="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+                </svg>
+            </div>
+            <div class="stat-value" id="community-count">-</div>
+            <div class="stat-label">그룹 수</div>
+        </div>
+        <div class="stat-card fade-in" style="animation-delay: 0.3s;">
+            <div class="stat-icon bg-yellow-500/30">
+                <svg class="w-6 h-6 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                </svg>
+            </div>
+            <div class="stat-value" id="density">-</div>
+            <div class="stat-label">네트워크 밀도</div>
+        </div>
+    </div>
+
+    <!-- 메인 콘텐츠 그리드 -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- 네트워크 시각화 -->
+        <div class="lg:col-span-2">
+            <div class="glass-card">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-semibold text-white">네트워크 시각화</h2>
+                    <select id="layout-select" class="glass-input w-auto text-sm">
+                        <option value="barnes_hut">Barnes-Hut</option>
+                        <option value="force">Force Atlas</option>
+                    </select>
+                </div>
+                <div class="network-container" id="network-container">
+                    <div class="flex items-center justify-center h-96">
+                        <div class="spinner"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 사이드 패널 -->
+        <div class="space-y-6">
+            <!-- 인기도 TOP 5 -->
+            <div class="glass-card fade-in">
+                <h3 class="text-lg font-semibold text-white mb-4">🏆 인기도 TOP 5</h3>
+                <div id="top-popularity" class="space-y-3">
+                    <!-- JavaScript로 채움 -->
+                </div>
+            </div>
+
+            <!-- 그룹 정보 -->
+            <div class="glass-card fade-in">
+                <h3 class="text-lg font-semibold text-white mb-4">👥 그룹 구성</h3>
+                <div id="communities-info" class="space-y-3">
+                    <!-- JavaScript로 채움 -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 중심성 차트 -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="glass-card">
+            <h3 class="text-lg font-semibold text-white mb-4">📊 인기도 (In-Degree)</h3>
+            <div class="h-64">
+                <canvas id="in-degree-chart"></canvas>
+            </div>
+        </div>
+        <div class="glass-card">
+            <h3 class="text-lg font-semibold text-white mb-4">📊 활동성 (Out-Degree)</h3>
+            <div class="h-64">
+                <canvas id="out-degree-chart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- 매개 중심성 & 영향력 -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="glass-card">
+            <h3 class="text-lg font-semibold text-white mb-4">📊 매개 중심성 (Betweenness)</h3>
+            <div class="h-64">
+                <canvas id="betweenness-chart"></canvas>
+            </div>
+        </div>
+        <div class="glass-card">
+            <h3 class="text-lg font-semibold text-white mb-4">📊 영향력 (Eigenvector)</h3>
+            <div class="h-64">
+                <canvas id="eigenvector-chart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- 학생 목록 테이블 -->
+    <div class="glass-card">
+        <h3 class="text-lg font-semibold text-white mb-4">📋 학생 목록</h3>
+        <div class="overflow-x-auto">
+            <table class="glass-table w-full">
+                <thead>
+                    <tr>
+                        <th>이름</th>
+                        <th>인기도</th>
+                        <th>활동성</th>
+                        <th>매개중심성</th>
+                        <th>그룹</th>
+                    </tr>
+                </thead>
+                <tbody id="students-table">
+                    <!-- JavaScript로 채움 -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // 차트 인스턴스 저장
+    let charts = {};
+
+    // 페이지 로드 시 데이터 가져오기
+    document.addEventListener('DOMContentLoaded', async () => {
+        await loadNetworkData();
+        await loadCentralityData();
+        await loadCommunitiesData();
+        await loadStudentsData();
+    });
+
+    // 네트워크 데이터 로드
+    async function loadNetworkData() {
+        try {
+            const layout = document.getElementById('layout-select').value;
+            const response = await fetch(`/api/network?layout=${layout}`);
+            const data = await response.json();
+
+            if (data.html) {
+                document.getElementById('network-container').innerHTML = `
+                    <iframe srcdoc="${data.html.replace(/"/g, '&quot;')}" style="width:100%; height:600px; border:none;"></iframe>
+                `;
+            }
+
+            // 통계 업데이트
+            if (data.stats) {
+                document.getElementById('node-count').textContent = data.stats.nodes || 0;
+                document.getElementById('edge-count').textContent = data.stats.edges || 0;
+                document.getElementById('community-count').textContent = data.stats.communities || 0;
+            }
+        } catch (error) {
+            console.error('Network data error:', error);
+            document.getElementById('network-container').innerHTML = `
+                <div class="flex items-center justify-center h-96 text-white/60">
+                    네트워크 데이터를 불러올 수 없습니다.
+                </div>
+            `;
+        }
+    }
+
+    // 레이아웃 변경 시 네트워크 다시 로드
+    document.getElementById('layout-select').addEventListener('change', loadNetworkData);
+
+    // 중심성 데이터 로드
+    async function loadCentralityData() {
+        const metrics = ['in_degree', 'out_degree', 'betweenness', 'eigenvector'];
+        const chartIds = ['in-degree-chart', 'out-degree-chart', 'betweenness-chart', 'eigenvector-chart'];
+        const colors = [
+            'rgba(59, 130, 246, 0.8)',
+            'rgba(16, 185, 129, 0.8)',
+            'rgba(245, 158, 11, 0.8)',
+            'rgba(139, 92, 246, 0.8)'
+        ];
+
+        for (let i = 0; i < metrics.length; i++) {
+            try {
+                const response = await fetch(`/api/centrality/${metrics[i]}?top_n=10`);
+                const data = await response.json();
+
+                if (data.labels && data.values) {
+                    createBarChart(chartIds[i], data.labels, data.values, colors[i]);
+
+                    // 인기도 TOP 5 업데이트
+                    if (metrics[i] === 'in_degree') {
+                        updateTopPopularity(data.labels.slice(0, 5), data.values.slice(0, 5));
+                    }
+                }
+            } catch (error) {
+                console.error(`${metrics[i]} data error:`, error);
+            }
+        }
+    }
+
+    // 바 차트 생성
+    function createBarChart(canvasId, labels, values, color) {
+        const ctx = document.getElementById(canvasId).getContext('2d');
+
+        if (charts[canvasId]) {
+            charts[canvasId].destroy();
+        }
+
+        charts[canvasId] = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: '',
+                    data: values,
+                    backgroundColor: color,
+                    borderColor: color.replace('0.8', '1'),
+                    borderWidth: 1,
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                ...chartDefaults,
+                indexAxis: 'y',
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+    }
+
+    // TOP 5 업데이트
+    function updateTopPopularity(labels, values) {
+        const container = document.getElementById('top-popularity');
+        container.innerHTML = labels.map((label, i) => `
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full ${i === 0 ? 'bg-yellow-500/30 text-yellow-400' : i === 1 ? 'bg-gray-400/30 text-gray-300' : i === 2 ? 'bg-orange-600/30 text-orange-400' : 'bg-white/10 text-white/60'} flex items-center justify-center font-bold text-sm">
+                    ${i + 1}
+                </div>
+                <div class="flex-1">
+                    <div class="text-white font-medium">${label}</div>
+                    <div class="text-white/50 text-sm">${values[i].toFixed(3)}</div>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // 커뮤니티 데이터 로드
+    async function loadCommunitiesData() {
+        try {
+            const response = await fetch('/api/communities');
+            const data = await response.json();
+
+            if (data.groups) {
+                const colors = ['#3F51B5', '#E91E63', '#FFC107', '#009688', '#9C27B0'];
+                const container = document.getElementById('communities-info');
+
+                container.innerHTML = Object.entries(data.groups).map(([id, members], i) => `
+                    <div class="p-3 rounded-lg bg-white/5">
+                        <div class="flex items-center gap-2 mb-2">
+                            <div class="w-3 h-3 rounded-full" style="background-color: ${colors[i % colors.length]}"></div>
+                            <span class="text-white font-medium">그룹 ${parseInt(id) + 1}</span>
+                            <span class="badge badge-primary ml-auto">${members.length}명</span>
+                        </div>
+                        <div class="text-white/60 text-sm">${members.slice(0, 3).join(', ')}${members.length > 3 ? '...' : ''}</div>
+                    </div>
+                `).join('');
+            }
+        } catch (error) {
+            console.error('Communities data error:', error);
+        }
+    }
+
+    // 학생 목록 로드
+    async function loadStudentsData() {
+        try {
+            const response = await fetch('/api/students');
+            const data = await response.json();
+
+            if (data.students) {
+                const tbody = document.getElementById('students-table');
+                tbody.innerHTML = data.students.map(s => `
+                    <tr>
+                        <td class="font-medium">${s.name}</td>
+                        <td>${s.in_degree.toFixed(3)}</td>
+                        <td>${s.out_degree.toFixed(3)}</td>
+                        <td>${s.betweenness.toFixed(3)}</td>
+                        <td><span class="badge badge-primary">그룹 ${s.community + 1}</span></td>
+                    </tr>
+                `).join('');
+            }
+        } catch (error) {
+            console.error('Students data error:', error);
+        }
+    }
+</script>
+{% endblock %}

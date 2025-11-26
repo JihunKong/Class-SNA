@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Class-SNA - 학급 관계 네트워크 분석 시스템">
+    <title>{% block title %}Class-SNA{% endblock %} | 학급 관계 분석</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            200: '#c7d2fe',
+                            300: '#a5b4fc',
+                            400: '#818cf8',
+                            500: '#667eea',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            800: '#3730a3',
+                            900: '#312e81',
+                        },
+                        secondary: {
+                            500: '#764ba2',
+                            600: '#6b4190',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Noto Sans KR', 'Inter', 'sans-serif'],
+                    },
+                    animation: {
+                        'gradient': 'gradient 15s ease infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        gradient: {
+                            '0%, 100%': { backgroundPosition: '0% 50%' },
+                            '50%': { backgroundPosition: '100% 50%' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Glassmorphism CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/glassmorphism.css') }}">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Plotly.js -->
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="min-h-screen gradient-bg bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+    <!-- 배경 장식 요소 -->
+    <div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
+        <div class="absolute -top-40 -right-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-float"></div>
+        <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-pink-500 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-float" style="animation-delay: 2s;"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-float" style="animation-delay: 4s;"></div>
+    </div>
+
+    <!-- 네비게이션 -->
+    <nav class="glass-nav">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <a href="{{ url_for('views.index') }}" class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-gradient-to-br from-primary-400 to-secondary-500 rounded-xl flex items-center justify-center">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                    </svg>
+                </div>
+                <span class="text-xl font-bold text-white">Class-SNA</span>
+            </a>
+
+            <div class="hidden md:flex items-center gap-2">
+                <a href="{{ url_for('views.index') }}" class="nav-link {% if request.endpoint == 'views.index' %}active{% endif %}">홈</a>
+                <a href="{{ url_for('student.join') }}" class="nav-link {% if request.endpoint == 'student.join' %}active{% endif %}">학급 참여</a>
+                {% if current_user.is_authenticated %}
+                <a href="{{ url_for('views.teacher_dashboard') }}" class="nav-link {% if request.endpoint == 'views.teacher_dashboard' %}active{% endif %}">내 학급</a>
+                <a href="{{ url_for('views.upload') }}" class="nav-link {% if request.endpoint == 'views.upload' %}active{% endif %}">데이터 분석</a>
+                {% if session.get('analyzed') %}
+                <a href="{{ url_for('analysis.dashboard') }}" class="nav-link {% if 'analysis' in request.endpoint %}active{% endif %}">분석 결과</a>
+                {% endif %}
+                <a href="{{ url_for('auth.logout') }}" class="nav-link">로그아웃</a>
+                {% else %}
+                <a href="{{ url_for('auth.login') }}" class="glass-btn-primary text-sm">교사 로그인</a>
+                {% endif %}
+            </div>
+
+            <!-- 모바일 메뉴 버튼 -->
+            <button id="mobile-menu-btn" class="md:hidden glass-btn p-2">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                </svg>
+            </button>
+        </div>
+
+        <!-- 모바일 메뉴 -->
+        <div id="mobile-menu" class="hidden md:hidden mt-4 pt-4 border-t border-white/10">
+            <div class="flex flex-col gap-2">
+                <a href="{{ url_for('views.index') }}" class="nav-link">홈</a>
+                <a href="{{ url_for('student.join') }}" class="nav-link">학급 참여</a>
+                {% if current_user.is_authenticated %}
+                <a href="{{ url_for('views.teacher_dashboard') }}" class="nav-link">내 학급</a>
+                <a href="{{ url_for('views.upload') }}" class="nav-link">데이터 분석</a>
+                {% if session.get('analyzed') %}
+                <a href="{{ url_for('analysis.dashboard') }}" class="nav-link">분석 결과</a>
+                {% endif %}
+                <a href="{{ url_for('auth.logout') }}" class="nav-link">로그아웃</a>
+                {% else %}
+                <a href="{{ url_for('auth.login') }}" class="nav-link">교사 로그인</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <!-- 메인 콘텐츠 -->
+    <main class="relative z-10 pt-20 pb-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} mb-6 fade-in">
+                        <span>{{ message }}</span>
+                        <button onclick="this.parentElement.remove()" class="ml-auto opacity-70 hover:opacity-100">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                            </svg>
+                        </button>
+                    </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <!-- 푸터 -->
+    <footer class="relative z-10 py-8 px-4 border-t border-white/10">
+        <div class="max-w-7xl mx-auto text-center text-white/60 text-sm">
+            <p>&copy; 2024 Class-SNA v2.0 - 학급 관계 네트워크 분석 시스템</p>
+            <p class="mt-2">Built with Flask, Tailwind CSS & Glassmorphism Design</p>
+        </div>
+    </footer>
+
+    <!-- 로딩 오버레이 -->
+    <div id="loading-overlay" class="loading-overlay hidden">
+        <div class="text-center">
+            <div class="spinner mx-auto mb-4"></div>
+            <p class="text-white text-lg">분석 중...</p>
+        </div>
+    </div>
+
+    <!-- 기본 JavaScript -->
+    <script>
+        // 모바일 메뉴 토글
+        document.getElementById('mobile-menu-btn')?.addEventListener('click', function() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+
+        // 로딩 오버레이 표시/숨김 함수
+        function showLoading() {
+            document.getElementById('loading-overlay').classList.remove('hidden');
+        }
+
+        function hideLoading() {
+            document.getElementById('loading-overlay').classList.add('hidden');
+        }
+
+        // API 요청 헬퍼
+        async function apiRequest(url, options = {}) {
+            showLoading();
+            try {
+                const response = await fetch(url, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...options.headers
+                    },
+                    ...options
+                });
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                console.error('API Error:', error);
+                throw error;
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // 차트 기본 옵션
+        const chartDefaults = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    labels: {
+                        color: 'rgba(255, 255, 255, 0.8)',
+                        font: { family: 'Noto Sans KR' }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    ticks: { color: 'rgba(255, 255, 255, 0.7)' },
+                    grid: { color: 'rgba(255, 255, 255, 0.1)' }
+                },
+                y: {
+                    ticks: { color: 'rgba(255, 255, 255, 0.7)' },
+                    grid: { color: 'rgba(255, 255, 255, 0.1)' }
+                }
+            }
+        };
+    </script>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
