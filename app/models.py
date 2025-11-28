@@ -22,6 +22,8 @@ class Teacher(UserMixin, db.Model):
     email = db.Column(db.String(255), unique=True, nullable=False)
     name = db.Column(db.String(100), nullable=False)
     profile_picture = db.Column(db.String(500))
+    is_admin = db.Column(db.Boolean, default=False)  # 관리자 여부
+    last_login = db.Column(db.DateTime)  # 마지막 로그인 시간
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
@@ -37,6 +39,9 @@ class Teacher(UserMixin, db.Model):
             'email': self.email,
             'name': self.name,
             'profile_picture': self.profile_picture,
+            'is_admin': self.is_admin,
+            'last_login': self.last_login.isoformat() if self.last_login else None,
+            'created_at': self.created_at.isoformat() if self.created_at else None,
             'classroom_count': self.classrooms.count()
         }
 
@@ -95,9 +100,10 @@ class Student(db.Model):
     classroom_id = db.Column(db.Integer, db.ForeignKey('classrooms.id'), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
-    # 설문 응답 관계
+    # 설문 응답 관계 (학생 삭제 시 응답도 함께 삭제)
     responses = db.relationship('SurveyResponse', backref='student', lazy='dynamic',
-                                foreign_keys='SurveyResponse.student_id')
+                                foreign_keys='SurveyResponse.student_id',
+                                cascade='all, delete-orphan')
 
     # 복합 유니크 제약 (같은 학급 내 이름 중복 방지)
     __table_args__ = (

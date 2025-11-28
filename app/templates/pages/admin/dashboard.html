@@ -1,0 +1,222 @@
+{% extends "base.html" %}
+{% block title %}{{ _('관리자 대시보드') }}{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 py-8">
+    <!-- 헤더 -->
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-white">{{ _('관리자 대시보드') }}</h1>
+        <p class="text-white/70 mt-2">{{ _('시스템 현황 및 사용자 통계') }}</p>
+    </div>
+
+    <!-- 주요 통계 카드 -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <!-- 총 교사 수 -->
+        <div class="glass rounded-2xl p-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-white/60 text-sm">{{ _('총 교사') }}</p>
+                    <p class="text-3xl font-bold text-white mt-1">{{ stats.total_teachers }}</p>
+                </div>
+                <div class="w-12 h-12 rounded-full bg-primary-500/20 flex items-center justify-center">
+                    <svg class="w-6 h-6 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                    </svg>
+                </div>
+            </div>
+            <p class="text-white/50 text-sm mt-4">
+                {{ _('최근 7일') }}: <span class="text-green-400">{{ stats.active_teachers_7d }}</span>
+            </p>
+        </div>
+
+        <!-- 총 학급 수 -->
+        <div class="glass rounded-2xl p-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-white/60 text-sm">{{ _('총 학급') }}</p>
+                    <p class="text-3xl font-bold text-white mt-1">{{ stats.total_classrooms }}</p>
+                </div>
+                <div class="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center">
+                    <svg class="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                    </svg>
+                </div>
+            </div>
+            <p class="text-white/50 text-sm mt-4">
+                {{ _('활성') }}: <span class="text-green-400">{{ stats.active_classrooms }}</span>
+            </p>
+        </div>
+
+        <!-- 총 학생 수 -->
+        <div class="glass rounded-2xl p-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-white/60 text-sm">{{ _('총 학생') }}</p>
+                    <p class="text-3xl font-bold text-white mt-1">{{ stats.total_students }}</p>
+                </div>
+                <div class="w-12 h-12 rounded-full bg-yellow-500/20 flex items-center justify-center">
+                    <svg class="w-6 h-6 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+                    </svg>
+                </div>
+            </div>
+            <p class="text-white/50 text-sm mt-4">
+                {{ _('평균') }}: <span class="text-yellow-400">{{ stats.avg_students_per_class }}</span> {{ _('/학급') }}
+            </p>
+        </div>
+
+        <!-- 설문 완료율 -->
+        <div class="glass rounded-2xl p-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-white/60 text-sm">{{ _('설문 완료') }}</p>
+                    <p class="text-3xl font-bold text-white mt-1">{{ stats.total_responses }}</p>
+                </div>
+                <div class="w-12 h-12 rounded-full bg-purple-500/20 flex items-center justify-center">
+                    <svg class="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+                    </svg>
+                </div>
+            </div>
+            <p class="text-white/50 text-sm mt-4">
+                {{ _('완료율') }}: <span class="text-purple-400">{{ stats.response_rate }}%</span>
+            </p>
+        </div>
+    </div>
+
+    <!-- 차트 영역 -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <!-- 일별 가입자 수 -->
+        <div class="glass rounded-2xl p-6">
+            <h3 class="text-lg font-semibold text-white mb-4">{{ _('일별 가입자 수') }} ({{ _('최근 30일') }})</h3>
+            <canvas id="signupsChart" height="200"></canvas>
+        </div>
+
+        <!-- 일별 활성 사용자 -->
+        <div class="glass rounded-2xl p-6">
+            <h3 class="text-lg font-semibold text-white mb-4">{{ _('일별 활성 사용자') }} ({{ _('최근 30일') }})</h3>
+            <canvas id="activeChart" height="200"></canvas>
+        </div>
+    </div>
+
+    <!-- 최근 가입 교사 목록 -->
+    <div class="glass rounded-2xl p-6">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-semibold text-white">{{ _('최근 가입 교사') }}</h3>
+            <a href="{{ url_for('admin.teachers_list') }}" class="text-primary-400 hover:text-primary-300 text-sm">
+                {{ _('전체 보기') }} →
+            </a>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead>
+                    <tr class="text-left text-white/60 text-sm border-b border-white/10">
+                        <th class="pb-3">{{ _('이름') }}</th>
+                        <th class="pb-3">{{ _('이메일') }}</th>
+                        <th class="pb-3">{{ _('가입일') }}</th>
+                        <th class="pb-3">{{ _('마지막 로그인') }}</th>
+                        <th class="pb-3">{{ _('학급 수') }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for teacher in teachers %}
+                    <tr class="border-b border-white/5 text-white/80">
+                        <td class="py-3">
+                            <div class="flex items-center gap-3">
+                                {% if teacher.profile_picture %}
+                                <img src="{{ teacher.profile_picture }}" alt="" class="w-8 h-8 rounded-full">
+                                {% else %}
+                                <div class="w-8 h-8 rounded-full bg-primary-500/30 flex items-center justify-center">
+                                    <span class="text-xs text-white">{{ teacher.name[0] }}</span>
+                                </div>
+                                {% endif %}
+                                <span>{{ teacher.name }}</span>
+                                {% if teacher.is_admin %}
+                                <span class="text-xs bg-purple-500/30 text-purple-300 px-2 py-0.5 rounded">Admin</span>
+                                {% endif %}
+                            </div>
+                        </td>
+                        <td class="py-3">{{ teacher.email }}</td>
+                        <td class="py-3">{{ teacher.created_at.strftime('%Y-%m-%d') if teacher.created_at else '-' }}</td>
+                        <td class="py-3">{{ teacher.last_login.strftime('%Y-%m-%d %H:%M') if teacher.last_login else '-' }}</td>
+                        <td class="py-3">{{ teacher.classrooms.count() }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// 일별 가입자 차트
+const signupsCtx = document.getElementById('signupsChart').getContext('2d');
+new Chart(signupsCtx, {
+    type: 'bar',
+    data: {
+        labels: {{ daily_signups | map(attribute='date') | list | tojson }},
+        datasets: [{
+            label: '{{ _("가입자") }}',
+            data: {{ daily_signups | map(attribute='count') | list | tojson }},
+            backgroundColor: 'rgba(102, 126, 234, 0.6)',
+            borderColor: 'rgba(102, 126, 234, 1)',
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: { color: 'rgba(255,255,255,0.6)' },
+                grid: { color: 'rgba(255,255,255,0.1)' }
+            },
+            x: {
+                ticks: { color: 'rgba(255,255,255,0.6)', maxTicksLimit: 10 },
+                grid: { display: false }
+            }
+        },
+        plugins: {
+            legend: { display: false }
+        }
+    }
+});
+
+// 일별 활성 사용자 차트
+const activeCtx = document.getElementById('activeChart').getContext('2d');
+new Chart(activeCtx, {
+    type: 'line',
+    data: {
+        labels: {{ daily_active | map(attribute='date') | list | tojson }},
+        datasets: [{
+            label: '{{ _("활성 사용자") }}',
+            data: {{ daily_active | map(attribute='count') | list | tojson }},
+            backgroundColor: 'rgba(16, 185, 129, 0.2)',
+            borderColor: 'rgba(16, 185, 129, 1)',
+            borderWidth: 2,
+            fill: true,
+            tension: 0.4
+        }]
+    },
+    options: {
+        responsive: true,
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: { color: 'rgba(255,255,255,0.6)' },
+                grid: { color: 'rgba(255,255,255,0.1)' }
+            },
+            x: {
+                ticks: { color: 'rgba(255,255,255,0.6)', maxTicksLimit: 10 },
+                grid: { display: false }
+            }
+        },
+        plugins: {
+            legend: { display: false }
+        }
+    }
+});
+</script>
+{% endblock %}

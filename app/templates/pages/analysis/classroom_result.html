@@ -1,0 +1,1157 @@
+{% extends "base.html" %}
+
+{% block title %}{{ _('분석 결과') }} - {{ classroom.name }}{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto space-y-6">
+    <!-- 헤더 -->
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+            <nav class="flex items-center gap-2 text-sm text-white/50 mb-2">
+                <a href="{{ url_for('views.teacher_dashboard') }}" class="hover:text-white">{{ _('내 학급') }}</a>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                </svg>
+                <span class="text-white">{{ _('분석 결과') }}</span>
+            </nav>
+            <h1 class="text-3xl font-bold text-white">{{ classroom.name }} {{ _('관계 분석') }}</h1>
+            <p class="text-white/60 mt-1">{{ _('분석 일시:') }} {{ result.created_at.strftime('%Y년 %m월 %d일 %H:%M') if result.created_at else _('알 수 없음') }}</p>
+        </div>
+        <div class="flex gap-3">
+            <button onclick="rerunAnalysis()" class="glass-btn">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                </svg>
+                {{ _('다시 분석') }}
+            </button>
+            <a href="{{ url_for('views.teacher_dashboard') }}" class="glass-btn">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                </svg>
+                {{ _('대시보드로') }}
+            </a>
+        </div>
+    </div>
+
+    <!-- 회피 경고 배너 (우선순위 높음) -->
+    <div id="avoidance-warnings-section" class="hidden">
+        <div id="avoidance-critical" class="hidden glass-card border-2 border-red-500/50 bg-red-500/10 mb-4">
+            <div class="flex items-start gap-4">
+                <div class="w-12 h-12 bg-red-500/30 rounded-full flex items-center justify-center flex-shrink-0">
+                    <svg class="w-7 h-7 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                    </svg>
+                </div>
+                <div class="flex-1">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="px-2 py-1 bg-red-500/30 text-red-300 text-xs font-bold rounded">{{ _('긴급') }}</span>
+                        <h3 class="text-lg font-semibold text-red-300">{{ _('관계 갈등 경고') }}</h3>
+                    </div>
+                    <div id="critical-warnings-content" class="space-y-2 text-white/80"></div>
+                    <button onclick="toggleWarningDetails()" class="mt-3 text-sm text-red-300 hover:text-red-200 underline">
+                        {{ _('자세히 보기') }} →
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="avoidance-summary" class="glass-card mb-4">
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-lg flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <h2 class="text-xl font-semibold text-white">{{ _('회피 관계 분석') }}</h2>
+                </div>
+                <span id="risk-level-badge" class="px-3 py-1 rounded-full text-sm font-medium"></span>
+            </div>
+            <div id="avoidance-summary-content" class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                <!-- 동적으로 채워짐 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- AI 해석 -->
+    <div id="ai-interpretation" class="glass-card">
+        <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                </svg>
+            </div>
+            <h2 class="text-xl font-semibold text-white">{{ _('AI 분석 해석') }}</h2>
+        </div>
+        <div id="interpretation-content" class="prose prose-invert max-w-none">
+            <p class="text-white/60">{{ _('AI 해석을 불러오는 중...') }}</p>
+        </div>
+    </div>
+
+    <!-- 통계 카드들 -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="glass-card text-center">
+            <div class="text-3xl font-bold text-blue-400" id="stat-students">-</div>
+            <div class="text-white/60 text-sm">{{ _('전체 학생') }}</div>
+        </div>
+        <div class="glass-card text-center">
+            <div class="text-3xl font-bold text-green-400" id="stat-edges">-</div>
+            <div class="text-white/60 text-sm">{{ _('관계 수') }}</div>
+        </div>
+        <div class="glass-card text-center">
+            <div class="text-3xl font-bold text-purple-400" id="stat-groups">-</div>
+            <div class="text-white/60 text-sm">{{ _('발견된 그룹') }}</div>
+        </div>
+        <div class="glass-card text-center">
+            <div class="text-3xl font-bold text-yellow-400" id="stat-density">-</div>
+            <div class="text-white/60 text-sm">{{ _('네트워크 밀도') }}</div>
+        </div>
+    </div>
+
+    <!-- 네트워크 시각화 (레이어 탭 포함) -->
+    <div class="glass-card">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4">
+            <h2 class="text-xl font-semibold text-white">{{ _('관계 네트워크') }}</h2>
+            <div class="flex gap-2">
+                <button onclick="resetNetwork()" class="glass-btn text-sm">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                    </svg>
+                    {{ _('초기화') }}
+                </button>
+            </div>
+        </div>
+
+        <!-- 레이어 탭 -->
+        <div class="mb-4">
+            <div class="flex flex-wrap gap-2" id="layer-tabs">
+                <button onclick="switchLayer('all')" class="layer-tab active" data-layer="all">
+                    <span class="w-3 h-3 rounded-full bg-gradient-to-r from-blue-500 to-purple-500"></span>
+                    {{ _('전체 네트워크') }}
+                </button>
+                <button onclick="switchLayer('friends')" class="layer-tab" data-layer="friends">
+                    <span class="w-3 h-3 rounded-full bg-blue-400"></span>
+                    {{ _('친한 친구') }}
+                </button>
+                <button onclick="switchLayer('helpers')" class="layer-tab" data-layer="helpers">
+                    <span class="w-3 h-3 rounded-full bg-green-400"></span>
+                    {{ _('도움 친구') }}
+                </button>
+                <button onclick="switchLayer('teammates')" class="layer-tab" data-layer="teammates">
+                    <span class="w-3 h-3 rounded-full bg-cyan-400"></span>
+                    {{ _('협력 친구') }}
+                </button>
+                <button onclick="switchLayer('leaders')" class="layer-tab" data-layer="leaders">
+                    <span class="w-3 h-3 rounded-full bg-amber-400"></span>
+                    {{ _('리더십') }}
+                </button>
+                <button onclick="switchLayer('trust')" class="layer-tab" data-layer="trust">
+                    <span class="w-3 h-3 rounded-full bg-purple-400"></span>
+                    {{ _('신뢰 친구') }}
+                </button>
+                <button onclick="switchLayer('communication')" class="layer-tab" data-layer="communication">
+                    <span class="w-3 h-3 rounded-full bg-pink-400"></span>
+                    {{ _('소통 잘함') }}
+                </button>
+                <button onclick="switchLayer('avoidance')" class="layer-tab" data-layer="avoidance">
+                    <span class="w-3 h-3 rounded-full bg-red-400"></span>
+                    {{ _('회피 관계') }}
+                </button>
+            </div>
+        </div>
+
+        <!-- 현재 레이어 정보 -->
+        <div id="layer-info" class="mb-4 p-3 rounded-lg bg-white/5 hidden">
+            <div class="flex items-center gap-3">
+                <span id="layer-icon" class="w-4 h-4 rounded-full"></span>
+                <span id="layer-name" class="font-medium text-white"></span>
+                <span class="text-white/50">|</span>
+                <span id="layer-stats" class="text-white/60 text-sm"></span>
+            </div>
+        </div>
+
+        <!-- 학생 필터 토글 박스 -->
+        <div class="mb-4">
+            <button onclick="toggleStudentFilter()" class="flex items-center gap-2 text-white/80 hover:text-white transition-colors">
+                <svg id="student-filter-arrow" class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                </svg>
+                <span class="text-sm font-medium">{{ _('학생 필터') }}</span>
+                <span id="student-filter-count" class="text-xs text-white/50"></span>
+            </button>
+            <div id="student-filter-panel" class="hidden mt-3 p-4 bg-white/5 rounded-lg border border-white/10">
+                <div class="flex items-center justify-between mb-3">
+                    <div class="flex gap-2">
+                        <button onclick="selectAllStudents()" class="text-xs px-2 py-1 bg-blue-500/20 text-blue-300 rounded hover:bg-blue-500/30 transition-colors">{{ _('전체 선택') }}</button>
+                        <button onclick="deselectAllStudents()" class="text-xs px-2 py-1 bg-gray-500/20 text-gray-300 rounded hover:bg-gray-500/30 transition-colors">{{ _('전체 해제') }}</button>
+                    </div>
+                    <button onclick="applyStudentFilter()" class="text-xs px-3 py-1 bg-green-500/20 text-green-300 rounded hover:bg-green-500/30 transition-colors font-medium">{{ _('필터 적용') }}</button>
+                </div>
+                <div id="student-checkboxes" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 max-h-48 overflow-y-auto pr-2">
+                    <!-- 동적으로 채워짐 -->
+                </div>
+            </div>
+        </div>
+
+        <div id="network-container" class="h-[500px] bg-black/30 rounded-xl"></div>
+
+        <!-- 범례 -->
+        <div id="network-legend" class="mt-4 flex flex-wrap gap-4 text-sm text-white/60">
+            <div class="flex items-center gap-2">
+                <div class="w-4 h-4 rounded-full bg-blue-500"></div>
+                <span>{{ _('그룹') }} 1</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <div class="w-4 h-4 rounded-full bg-green-500"></div>
+                <span>{{ _('그룹') }} 2</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <div class="w-4 h-4 rounded-full bg-orange-500"></div>
+                <span>{{ _('그룹') }} 3</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <div class="w-4 h-4 rounded-full bg-purple-500"></div>
+                <span>{{ _('그룹') }} 4+</span>
+            </div>
+        </div>
+
+        <!-- 관계 통계 테이블 토글 -->
+        <div class="mt-6 border-t border-white/10 pt-4">
+            <button onclick="toggleStatsTable()" class="flex items-center gap-2 text-white/80 hover:text-white transition-colors">
+                <svg id="stats-table-arrow" class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                </svg>
+                <span class="text-sm font-medium">{{ _('관계 유형별 통계 표') }}</span>
+            </button>
+            <div id="stats-table-panel" class="hidden mt-4">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead>
+                            <tr class="border-b border-white/20">
+                                <th class="text-left py-2 px-3 text-white/70 font-medium">{{ _('학생') }}</th>
+                                <th class="text-center py-2 px-2 text-blue-400 font-medium" title="{{ _('받은 친한 친구 선택 수') }}">
+                                    <span class="hidden sm:inline">{{ _('친한친구') }}</span>
+                                    <span class="sm:hidden">{{ _('친구') }}</span>
+                                </th>
+                                <th class="text-center py-2 px-2 text-green-400 font-medium" title="{{ _('받은 도움 친구 선택 수') }}">
+                                    <span>{{ _('도움') }}</span>
+                                </th>
+                                <th class="text-center py-2 px-2 text-cyan-400 font-medium" title="{{ _('받은 협력 친구 선택 수') }}">
+                                    <span>{{ _('협력') }}</span>
+                                </th>
+                                <th class="text-center py-2 px-2 text-yellow-400 font-medium" title="{{ _('받은 리더십 선택 수') }}">
+                                    <span class="hidden sm:inline">{{ _('리더십') }}</span>
+                                    <span class="sm:hidden">{{ _('리더') }}</span>
+                                </th>
+                                <th class="text-center py-2 px-2 text-purple-400 font-medium" title="{{ _('받은 신뢰 선택 수') }}">
+                                    <span>{{ _('신뢰') }}</span>
+                                </th>
+                                <th class="text-center py-2 px-2 text-pink-400 font-medium" title="{{ _('받은 소통 선택 수') }}">
+                                    <span>{{ _('소통') }}</span>
+                                </th>
+                                <th class="text-center py-2 px-2 text-red-400 font-medium" title="{{ _('받은 회피 선택 수') }}">
+                                    <span>{{ _('회피') }}</span>
+                                </th>
+                                <th class="text-center py-2 px-2 text-white/70 font-medium" title="{{ _('총 받은 선택 수') }}">{{ _('합계') }}</th>
+                            </tr>
+                        </thead>
+                        <tbody id="stats-table-body">
+                            <!-- 동적으로 채워짐 -->
+                        </tbody>
+                    </table>
+                </div>
+                <p class="mt-3 text-xs text-white/40">* {{ _('각 숫자는 해당 학생이 다른 학생들로부터 받은 선택 수입니다.') }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 중심성 분석 -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- 인기도 (In-Degree) -->
+        <div class="glass-card">
+            <h3 class="text-lg font-semibold text-white mb-4">
+                <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-blue-500/30 text-blue-300 text-sm mr-2">1</span>
+                {{ _('인기도 순위 (In-Degree)') }}
+            </h3>
+            <p class="text-white/50 text-sm mb-4">{{ _('다른 학생들이 많이 선택한 학생') }}</p>
+            <div id="in-degree-list" class="space-y-2">
+                <!-- 동적으로 채워짐 -->
+            </div>
+        </div>
+
+        <!-- 매개 중심성 (Betweenness) -->
+        <div class="glass-card">
+            <h3 class="text-lg font-semibold text-white mb-4">
+                <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-green-500/30 text-green-300 text-sm mr-2">2</span>
+                {{ _('매개 중심성 순위 (Betweenness)') }}
+            </h3>
+            <p class="text-white/50 text-sm mb-4">{{ _('서로 다른 그룹을 연결하는 학생') }}</p>
+            <div id="betweenness-list" class="space-y-2">
+                <!-- 동적으로 채워짐 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 그룹 분석 -->
+    <div class="glass-card">
+        <h2 class="text-xl font-semibold text-white mb-4">{{ _('그룹(커뮤니티) 분석') }}</h2>
+        <div id="communities-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <!-- 동적으로 채워짐 -->
+        </div>
+    </div>
+</div>
+
+<!-- vis.js CDN -->
+<script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+<!-- Marked.js for Markdown rendering -->
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+<script>
+const classroomId = {{ classroom.id }};
+let network = null;
+let analysisData = null;
+let currentLayer = 'all';
+let avoidanceData = null;
+let allStudents = [];
+let selectedStudents = new Set();
+let studentStats = {};
+
+// 번역 문자열
+const TRANS = {
+    savedResult: '{{ _("저장된 분석 결과입니다. AI 해석을 보려면 다시 분석 버튼을 클릭하세요.") }}',
+    analysisComplete: '{{ _("분석이 완료되었습니다!") }}',
+    analysisError: '{{ _("분석 중 오류가 발생했습니다.") }}',
+    layerError: '{{ _("레이어 데이터를 불러올 수 없습니다.") }}',
+    layerLoadError: '{{ _("레이어 데이터를 불러오는 중 오류가 발생했습니다.") }}',
+    noRelationData: '{{ _("관계 데이터가 없습니다.") }}',
+    noGroupFormed: '{{ _("아직 명확한 그룹이 형성되지 않았습니다.") }}',
+    needMoreResponses: '{{ _("더 많은 학생들의 설문 응답이 필요합니다.") }}',
+    group: '{{ _("그룹") }}',
+    people: '{{ _("명") }}',
+    nodes: '{{ _("노드") }}',
+    connections: '{{ _("연결") }}',
+    avoidanceOneWay: '{{ _("회피 관계 (한 방향)") }}',
+    avoidanceStudent: '{{ _("회피 관계 관련 학생") }}',
+    relationStudent: '{{ _("관계 학생") }}',
+    selectAll: '{{ _("전체 선택됨") }}',
+    selected: '{{ _("선택") }}',
+    selectMinOne: '{{ _("최소 1명 이상의 학생을 선택해주세요.") }}',
+    filteredTo: '{{ _("명의 학생으로 필터링되었습니다.") }}',
+    riskCritical: '{{ _("위험") }}',
+    riskHigh: '{{ _("주의") }}',
+    riskModerate: '{{ _("관심필요") }}',
+    riskLow: '{{ _("양호") }}',
+    mutualAvoidance: '{{ _("상호 회피") }}',
+    avoidanceTarget: '{{ _("회피 대상자") }}',
+    totalWarnings: '{{ _("총 경고") }}',
+    studentsInvolved: '{{ _("관련 학생") }}'
+};
+
+// 색상 팔레트
+const colorPalette = [
+    '#3b82f6', '#22c55e', '#f97316', '#a855f7', '#ec4899',
+    '#14b8a6', '#f59e0b', '#6366f1', '#ef4444', '#84cc16'
+];
+
+// 레이어별 색상 및 정보
+const layerConfig = {
+    all: { color: 'linear-gradient(to right, #3b82f6, #a855f7)', label: '{{ _("전체 네트워크") }}', edgeColor: 'rgba(255,255,255,0.3)' },
+    friends: { color: '#60a5fa', label: '{{ _("친한 친구") }}', edgeColor: 'rgba(96, 165, 250, 0.5)' },
+    helpers: { color: '#4ade80', label: '{{ _("도움 친구") }}', edgeColor: 'rgba(74, 222, 128, 0.5)' },
+    teammates: { color: '#22d3ee', label: '{{ _("협력 친구") }}', edgeColor: 'rgba(34, 211, 238, 0.5)' },
+    leaders: { color: '#fbbf24', label: '{{ _("리더십") }}', edgeColor: 'rgba(251, 191, 36, 0.5)' },
+    trust: { color: '#c084fc', label: '{{ _("신뢰 친구") }}', edgeColor: 'rgba(192, 132, 252, 0.5)' },
+    communication: { color: '#f472b6', label: '{{ _("소통 잘함") }}', edgeColor: 'rgba(244, 114, 182, 0.5)' },
+    avoidance: { color: '#f87171', label: '{{ _("회피 관계") }}', edgeColor: 'rgba(248, 113, 113, 0.6)' }
+};
+
+// 페이지 로드 시 데이터 가져오기
+document.addEventListener('DOMContentLoaded', function() {
+    loadAnalysisData();
+    loadAvoidanceWarnings();
+});
+
+async function loadAnalysisData() {
+    try {
+        const response = await fetch(`/api/v1/classroom/${classroomId}/analyze`, {
+            method: 'POST'
+        });
+        const data = await response.json();
+
+        if (data.success) {
+            analysisData = data;
+            renderAnalysis(data);
+        } else {
+            console.error('Analysis data load failed:', data.error);
+            loadSavedResult();
+        }
+    } catch (error) {
+        console.error('Analysis data load error:', error);
+        loadSavedResult();
+    }
+}
+
+async function loadSavedResult() {
+    try {
+        const response = await fetch(`/api/v1/classroom/${classroomId}/analysis`);
+        const data = await response.json();
+
+        if (data.exists) {
+            renderAnalysis({
+                ...data,
+                interpretation: TRANS.savedResult
+            });
+        }
+    } catch (error) {
+        console.error('Saved result load error:', error);
+    }
+}
+
+function renderAnalysis(data) {
+    const stats = data.stats || {};
+    document.getElementById('stat-students').textContent = stats.nodes_count || data.network_data?.nodes?.length || '-';
+    document.getElementById('stat-edges').textContent = stats.edges_count || data.network_data?.edges?.length || '-';
+    document.getElementById('stat-groups').textContent = Object.keys(data.communities || {}).length || '-';
+    document.getElementById('stat-density').textContent = stats.density ? stats.density.toFixed(3) : '-';
+
+    if (data.interpretation) {
+        const interpretationHtml = marked.parse(data.interpretation);
+        document.getElementById('interpretation-content').innerHTML = interpretationHtml;
+    }
+
+    if (data.network_data?.nodes) {
+        allStudents = data.network_data.nodes.map(n => n.label || n.id);
+        allStudents.forEach(s => selectedStudents.add(s));
+        renderStudentCheckboxes();
+    }
+
+    renderNetwork(data.network_data, data.communities);
+    renderCentralityRankings(data.metrics);
+    renderCommunities(data.communities);
+    loadStudentStats();
+}
+
+function calculateInDegree(edges) {
+    const inDegree = {};
+    edges.forEach(edge => {
+        const to = edge.target || edge.to;
+        inDegree[to] = (inDegree[to] || 0) + 1;
+    });
+    return inDegree;
+}
+
+function getNodeSize(nodeId, inDegree, minSize = 15, maxSize = 40) {
+    const degree = inDegree[nodeId] || 0;
+    const maxDegree = Math.max(...Object.values(inDegree), 1);
+    return minSize + (degree / maxDegree) * (maxSize - minSize);
+}
+
+function renderNetwork(networkData, communities) {
+    if (!networkData || !networkData.nodes) return;
+
+    const container = document.getElementById('network-container');
+    const inDegree = calculateInDegree(networkData.edges);
+
+    const nodes = networkData.nodes.map(node => {
+        const nodeId = node.id || node.label;
+        const communityId = getCommunityId(nodeId, communities);
+        return {
+            id: nodeId,
+            label: node.label || nodeId,
+            size: getNodeSize(nodeId, inDegree),
+            color: colorPalette[communityId % colorPalette.length],
+            font: { color: '#ffffff', size: 14 },
+            borderWidth: 2,
+            borderWidthSelected: 4
+        };
+    });
+
+    const edges = networkData.edges.map((edge, idx) => ({
+        id: idx,
+        from: edge.source || edge.from,
+        to: edge.target || edge.to,
+        arrows: 'to',
+        color: { color: 'rgba(255,255,255,0.3)', highlight: 'rgba(255,255,255,0.8)' },
+        width: Math.max(1, (edge.weight || 1))
+    }));
+
+    const data = {
+        nodes: new vis.DataSet(nodes),
+        edges: new vis.DataSet(edges)
+    };
+
+    const options = {
+        physics: {
+            solver: 'forceAtlas2Based',
+            forceAtlas2Based: {
+                gravitationalConstant: -50,
+                centralGravity: 0.01,
+                springLength: 100,
+                springConstant: 0.08
+            },
+            stabilization: { iterations: 200 }
+        },
+        interaction: { hover: true, tooltipDelay: 200 },
+        nodes: { shape: 'dot', shadow: true },
+        edges: { smooth: { type: 'continuous' } }
+    };
+
+    network = new vis.Network(container, data, options);
+}
+
+function getCommunityId(nodeId, communities) {
+    if (!communities) return 0;
+    for (const [commId, members] of Object.entries(communities)) {
+        if (Array.isArray(members) && members.includes(nodeId)) {
+            return parseInt(commId);
+        }
+    }
+    return 0;
+}
+
+function renderCentralityRankings(metrics) {
+    if (!metrics) return;
+
+    const inDegree = metrics.in_degree || {};
+    const inDegreeList = document.getElementById('in-degree-list');
+    const sortedInDegree = Object.entries(inDegree)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 10);
+
+    inDegreeList.innerHTML = sortedInDegree.map(([name, value], idx) => `
+        <div class="flex items-center gap-3 p-2 rounded-lg ${idx < 3 ? 'bg-blue-500/20' : 'bg-white/5'}">
+            <span class="w-6 h-6 flex items-center justify-center rounded-full ${idx < 3 ? 'bg-blue-500 text-white' : 'bg-white/20 text-white/60'} text-sm font-medium">${idx + 1}</span>
+            <span class="flex-grow text-white">${name}</span>
+            <span class="text-white/60 text-sm">${(value * 100).toFixed(1)}%</span>
+        </div>
+    `).join('');
+
+    const betweenness = metrics.betweenness || {};
+    const betweennessList = document.getElementById('betweenness-list');
+    const sortedBetweenness = Object.entries(betweenness)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 10);
+
+    betweennessList.innerHTML = sortedBetweenness.map(([name, value], idx) => `
+        <div class="flex items-center gap-3 p-2 rounded-lg ${idx < 3 ? 'bg-green-500/20' : 'bg-white/5'}">
+            <span class="w-6 h-6 flex items-center justify-center rounded-full ${idx < 3 ? 'bg-green-500 text-white' : 'bg-white/20 text-white/60'} text-sm font-medium">${idx + 1}</span>
+            <span class="flex-grow text-white">${name}</span>
+            <span class="text-white/60 text-sm">${(value * 100).toFixed(1)}%</span>
+        </div>
+    `).join('');
+}
+
+function renderCommunities(communities) {
+    const container = document.getElementById('communities-container');
+
+    if (!communities || Object.keys(communities).length === 0) {
+        container.innerHTML = `
+            <div class="col-span-full text-center py-8">
+                <div class="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-8 h-8 text-white/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    </svg>
+                </div>
+                <p class="text-white/60 text-lg">${TRANS.noGroupFormed}</p>
+                <p class="text-white/40 text-sm mt-2">${TRANS.needMoreResponses}</p>
+            </div>
+        `;
+        return;
+    }
+
+    const entries = Object.entries(communities);
+
+    container.innerHTML = entries.map(([commId, members], idx) => {
+        const memberList = Array.isArray(members) ? members : [members];
+        const colorIndex = parseInt(commId) || idx;
+        const color = colorPalette[colorIndex % colorPalette.length];
+        const displayNum = (parseInt(commId) || 0) + 1;
+
+        return `
+            <div class="p-4 rounded-xl bg-white/5 border-l-4" style="border-color: ${color}">
+                <div class="flex items-center gap-2 mb-3">
+                    <div class="w-6 h-6 rounded-full" style="background: ${color}"></div>
+                    <h4 class="font-medium text-white">${TRANS.group} ${displayNum}</h4>
+                    <span class="ml-auto text-white/50 text-sm">${memberList.length}${TRANS.people}</span>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                    ${memberList.map(m => `<span class="px-2 py-1 rounded bg-white/10 text-white/80 text-sm">${m}</span>`).join('')}
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+function resetNetwork() {
+    if (network) {
+        network.fit();
+    }
+}
+
+async function rerunAnalysis() {
+    showLoading();
+    try {
+        const response = await fetch(`/api/v1/classroom/${classroomId}/analyze`, {
+            method: 'POST'
+        });
+        const data = await response.json();
+
+        if (data.success) {
+            showToast(TRANS.analysisComplete, 'success');
+            renderAnalysis(data);
+        } else {
+            showToast(data.error || TRANS.analysisError, 'error');
+        }
+    } catch (error) {
+        showToast(TRANS.analysisError, 'error');
+    } finally {
+        hideLoading();
+    }
+}
+
+async function loadAvoidanceWarnings() {
+    try {
+        const response = await fetch(`/api/v1/classroom/${classroomId}/warnings/avoidance`);
+        const data = await response.json();
+
+        if (data.success) {
+            avoidanceData = data;
+            renderAvoidanceWarnings(data);
+        }
+    } catch (error) {
+        console.log('Avoidance warnings load failed:', error);
+    }
+}
+
+function renderAvoidanceWarnings(data) {
+    const section = document.getElementById('avoidance-warnings-section');
+    const summary = data.summary || {};
+
+    if (summary.total_warnings === 0) {
+        section.classList.add('hidden');
+        return;
+    }
+
+    section.classList.remove('hidden');
+
+    const riskBadge = document.getElementById('risk-level-badge');
+    const riskColors = {
+        'CRITICAL': 'bg-red-500/30 text-red-300',
+        'HIGH': 'bg-orange-500/30 text-orange-300',
+        'MODERATE': 'bg-yellow-500/30 text-yellow-300',
+        'LOW': 'bg-green-500/30 text-green-300'
+    };
+    const riskLabels = {
+        'CRITICAL': TRANS.riskCritical,
+        'HIGH': TRANS.riskHigh,
+        'MODERATE': TRANS.riskModerate,
+        'LOW': TRANS.riskLow
+    };
+    riskBadge.className = `px-3 py-1 rounded-full text-sm font-medium ${riskColors[summary.risk_level] || riskColors['LOW']}`;
+    riskBadge.textContent = riskLabels[summary.risk_level] || TRANS.riskLow;
+
+    const summaryContent = document.getElementById('avoidance-summary-content');
+    summaryContent.innerHTML = `
+        <div class="p-3 rounded-lg bg-white/5">
+            <div class="text-2xl font-bold text-red-400">${summary.mutual_avoidance_count || 0}</div>
+            <div class="text-white/50 text-sm">${TRANS.mutualAvoidance}</div>
+        </div>
+        <div class="p-3 rounded-lg bg-white/5">
+            <div class="text-2xl font-bold text-orange-400">${summary.avoidance_target_count || 0}</div>
+            <div class="text-white/50 text-sm">${TRANS.avoidanceTarget}</div>
+        </div>
+        <div class="p-3 rounded-lg bg-white/5">
+            <div class="text-2xl font-bold text-yellow-400">${summary.total_warnings || 0}</div>
+            <div class="text-white/50 text-sm">${TRANS.totalWarnings}</div>
+        </div>
+        <div class="p-3 rounded-lg bg-white/5">
+            <div class="text-2xl font-bold text-white">${summary.students_involved || 0}</div>
+            <div class="text-white/50 text-sm">${TRANS.studentsInvolved}</div>
+        </div>
+    `;
+
+    const criticalSection = document.getElementById('avoidance-critical');
+    const criticalWarnings = (data.warnings || []).filter(w => w.level === 'CRITICAL' || w.level === 'HIGH');
+
+    if (criticalWarnings.length > 0) {
+        criticalSection.classList.remove('hidden');
+        const criticalContent = document.getElementById('critical-warnings-content');
+        criticalContent.innerHTML = criticalWarnings.slice(0, 3).map(w => `
+            <div class="flex items-start gap-2">
+                <span class="w-2 h-2 rounded-full ${w.level === 'CRITICAL' ? 'bg-red-400' : 'bg-orange-400'} mt-1.5 flex-shrink-0"></span>
+                <span>${w.description || w.message}</span>
+            </div>
+        `).join('');
+    } else {
+        criticalSection.classList.add('hidden');
+    }
+}
+
+function toggleWarningDetails() {
+    switchLayer('avoidance');
+    document.getElementById('network-container').scrollIntoView({ behavior: 'smooth' });
+}
+
+async function switchLayer(layerType) {
+    currentLayer = layerType;
+
+    document.querySelectorAll('.layer-tab').forEach(tab => {
+        tab.classList.remove('active');
+        if (tab.dataset.layer === layerType) {
+            tab.classList.add('active');
+        }
+    });
+
+    if (layerType === 'all') {
+        document.getElementById('layer-info').classList.add('hidden');
+        if (analysisData) {
+            if (selectedStudents.size < allStudents.length) {
+                renderFilteredNetwork(analysisData.network_data, analysisData.communities);
+            } else {
+                renderNetwork(analysisData.network_data, analysisData.communities);
+            }
+        }
+        return;
+    }
+
+    try {
+        showLoading();
+        const response = await fetch(`/api/v1/classroom/${classroomId}/analysis/layer/${layerType}`);
+        const data = await response.json();
+
+        if (data.success) {
+            renderLayerNetwork(layerType, data);
+        } else {
+            showToast(data.error || TRANS.layerError, 'error');
+        }
+    } catch (error) {
+        console.error('Layer data load error:', error);
+        showToast(TRANS.layerLoadError, 'error');
+    } finally {
+        hideLoading();
+    }
+}
+
+function renderLayerNetwork(layerType, data) {
+    const config = layerConfig[layerType];
+    const networkData = data.network_data;
+
+    const layerInfo = document.getElementById('layer-info');
+    layerInfo.classList.remove('hidden');
+
+    const layerIcon = document.getElementById('layer-icon');
+    layerIcon.style.background = config.color;
+
+    document.getElementById('layer-name').textContent = config.label;
+    document.getElementById('layer-stats').textContent =
+        `${TRANS.nodes} ${networkData?.nodes?.length || 0}개 | ${TRANS.connections} ${networkData?.edges?.length || 0}개`;
+
+    if (!networkData || !networkData.nodes || networkData.nodes.length === 0) {
+        const container = document.getElementById('network-container');
+        container.innerHTML = `
+            <div class="flex items-center justify-center h-full">
+                <div class="text-center">
+                    <div class="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-8 h-8 text-white/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/>
+                        </svg>
+                    </div>
+                    <p class="text-white/60">${config.label} ${TRANS.noRelationData}</p>
+                </div>
+            </div>
+        `;
+        network = null;
+        return;
+    }
+
+    const container = document.getElementById('network-container');
+    container.innerHTML = '';
+
+    const isFiltered = selectedStudents.size < allStudents.length;
+    const filteredNodes = isFiltered
+        ? networkData.nodes.filter(node => selectedStudents.has(node.label || node.id))
+        : networkData.nodes;
+    const filteredEdges = isFiltered
+        ? networkData.edges.filter(edge => {
+            const from = edge.source || edge.from;
+            const to = edge.target || edge.to;
+            return selectedStudents.has(from) && selectedStudents.has(to);
+        })
+        : networkData.edges;
+
+    const inDegree = calculateInDegree(filteredEdges);
+
+    const nodes = filteredNodes.map(node => ({
+        id: node.id || node.label,
+        label: node.label || node.id,
+        size: getNodeSize(node.id || node.label, inDegree),
+        color: config.color,
+        font: { color: '#ffffff', size: 14 },
+        borderWidth: 2,
+        borderWidthSelected: 4
+    }));
+
+    const edgeColor = layerType === 'avoidance' ? 'rgba(248, 113, 113, 0.6)' : config.edgeColor;
+    const edges = filteredEdges.map((edge, idx) => ({
+        id: idx,
+        from: edge.source || edge.from,
+        to: edge.target || edge.to,
+        arrows: 'to',
+        color: { color: edgeColor, highlight: config.color },
+        width: Math.max(1, (edge.weight || 1)),
+        dashes: layerType === 'avoidance'
+    }));
+
+    const visData = {
+        nodes: new vis.DataSet(nodes),
+        edges: new vis.DataSet(edges)
+    };
+
+    const options = {
+        physics: {
+            solver: 'forceAtlas2Based',
+            forceAtlas2Based: {
+                gravitationalConstant: -50,
+                centralGravity: 0.01,
+                springLength: 100,
+                springConstant: 0.08
+            },
+            stabilization: { iterations: 200 }
+        },
+        interaction: { hover: true, tooltipDelay: 200 },
+        nodes: { shape: 'dot', shadow: true },
+        edges: { smooth: { type: 'continuous' } }
+    };
+
+    network = new vis.Network(container, visData, options);
+    updateLegendForLayer(layerType);
+}
+
+function updateLegendForLayer(layerType) {
+    const legend = document.getElementById('network-legend');
+
+    if (layerType === 'avoidance') {
+        legend.innerHTML = `
+            <div class="flex items-center gap-2">
+                <div class="w-4 h-1 bg-red-400" style="border-style: dashed; border-width: 1px;"></div>
+                <span>${TRANS.avoidanceOneWay}</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <div class="w-4 h-4 rounded-full bg-red-400"></div>
+                <span>${TRANS.avoidanceStudent}</span>
+            </div>
+        `;
+    } else if (layerType !== 'all') {
+        const config = layerConfig[layerType];
+        legend.innerHTML = `
+            <div class="flex items-center gap-2">
+                <div class="w-4 h-4 rounded-full" style="background: ${config.color}"></div>
+                <span>${config.label} ${TRANS.relationStudent}</span>
+            </div>
+        `;
+    } else {
+        legend.innerHTML = `
+            <div class="flex items-center gap-2">
+                <div class="w-4 h-4 rounded-full bg-blue-500"></div>
+                <span>${TRANS.group} 1</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <div class="w-4 h-4 rounded-full bg-green-500"></div>
+                <span>${TRANS.group} 2</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <div class="w-4 h-4 rounded-full bg-orange-500"></div>
+                <span>${TRANS.group} 3</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <div class="w-4 h-4 rounded-full bg-purple-500"></div>
+                <span>${TRANS.group} 4+</span>
+            </div>
+        `;
+    }
+}
+
+function toggleStudentFilter() {
+    const panel = document.getElementById('student-filter-panel');
+    const arrow = document.getElementById('student-filter-arrow');
+    panel.classList.toggle('hidden');
+    arrow.classList.toggle('rotate-90');
+}
+
+function renderStudentCheckboxes() {
+    const container = document.getElementById('student-checkboxes');
+    container.innerHTML = allStudents.map(student => `
+        <label class="flex items-center gap-2 p-2 bg-white/5 rounded cursor-pointer hover:bg-white/10 transition-colors">
+            <input type="checkbox"
+                   class="student-checkbox w-4 h-4 rounded border-white/30 bg-white/10 text-blue-500 focus:ring-blue-500 focus:ring-offset-0"
+                   value="${student}"
+                   ${selectedStudents.has(student) ? 'checked' : ''}
+                   onchange="updateStudentSelection('${student}', this.checked)">
+            <span class="text-sm text-white/80 truncate">${student}</span>
+        </label>
+    `).join('');
+    updateFilterCount();
+}
+
+function updateStudentSelection(student, checked) {
+    if (checked) {
+        selectedStudents.add(student);
+    } else {
+        selectedStudents.delete(student);
+    }
+    updateFilterCount();
+
+    if (selectedStudents.size > 0) {
+        applyStudentFilterSilent();
+    }
+}
+
+function updateFilterCount() {
+    const countEl = document.getElementById('student-filter-count');
+    const total = allStudents.length;
+    const selected = selectedStudents.size;
+    if (selected === total) {
+        countEl.textContent = `(${TRANS.selectAll})`;
+    } else {
+        countEl.textContent = `(${selected}/${total}${TRANS.people} ${TRANS.selected})`;
+    }
+}
+
+function selectAllStudents() {
+    allStudents.forEach(s => selectedStudents.add(s));
+    document.querySelectorAll('.student-checkbox').forEach(cb => cb.checked = true);
+    updateFilterCount();
+    applyStudentFilterSilent();
+}
+
+function deselectAllStudents() {
+    selectedStudents.clear();
+    document.querySelectorAll('.student-checkbox').forEach(cb => cb.checked = false);
+    updateFilterCount();
+    if (currentLayer === 'all' && analysisData) {
+        renderFilteredNetwork(analysisData.network_data, analysisData.communities);
+    } else {
+        switchLayer(currentLayer);
+    }
+}
+
+function applyStudentFilter() {
+    if (selectedStudents.size === 0) {
+        showToast(TRANS.selectMinOne, 'warning');
+        return;
+    }
+
+    if (currentLayer === 'all' && analysisData) {
+        renderFilteredNetwork(analysisData.network_data, analysisData.communities);
+    } else {
+        switchLayer(currentLayer);
+    }
+    showToast(`${selectedStudents.size}${TRANS.filteredTo}`, 'success');
+}
+
+function applyStudentFilterSilent() {
+    if (selectedStudents.size === 0) return;
+
+    if (currentLayer === 'all' && analysisData) {
+        renderFilteredNetwork(analysisData.network_data, analysisData.communities);
+    } else {
+        switchLayer(currentLayer);
+    }
+}
+
+function renderFilteredNetwork(networkData, communities) {
+    if (!networkData || !networkData.nodes) return;
+
+    const container = document.getElementById('network-container');
+    const config = layerConfig[currentLayer] || layerConfig.all;
+
+    const filteredNodes = networkData.nodes.filter(node => {
+        const nodeId = node.label || node.id;
+        return selectedStudents.has(nodeId);
+    });
+
+    const filteredEdges = networkData.edges.filter(edge => {
+        const from = edge.source || edge.from;
+        const to = edge.target || edge.to;
+        return selectedStudents.has(from) && selectedStudents.has(to);
+    });
+
+    const inDegree = calculateInDegree(filteredEdges);
+
+    const nodes = filteredNodes.map(node => {
+        const nodeId = node.id || node.label;
+        const communityId = getCommunityId(nodeId, communities);
+        return {
+            id: nodeId,
+            label: node.label || nodeId,
+            size: getNodeSize(nodeId, inDegree),
+            color: currentLayer === 'all' ? colorPalette[communityId % colorPalette.length] : config.color,
+            font: { color: '#ffffff', size: 14 },
+            borderWidth: 2,
+            borderWidthSelected: 4
+        };
+    });
+
+    const edgeColor = currentLayer === 'avoidance' ? 'rgba(248, 113, 113, 0.6)' : config.edgeColor;
+    const edges = filteredEdges.map((edge, idx) => ({
+        id: idx,
+        from: edge.source || edge.from,
+        to: edge.target || edge.to,
+        arrows: 'to',
+        color: { color: edgeColor, highlight: config.color },
+        width: Math.max(1, (edge.weight || 1)),
+        dashes: currentLayer === 'avoidance'
+    }));
+
+    const visData = {
+        nodes: new vis.DataSet(nodes),
+        edges: new vis.DataSet(edges)
+    };
+
+    const options = {
+        physics: {
+            solver: 'forceAtlas2Based',
+            forceAtlas2Based: {
+                gravitationalConstant: -50,
+                centralGravity: 0.01,
+                springLength: 100,
+                springConstant: 0.08
+            },
+            stabilization: { iterations: 200 }
+        },
+        interaction: { hover: true, tooltipDelay: 200 },
+        nodes: { shape: 'dot', shadow: true },
+        edges: { smooth: { type: 'continuous' } }
+    };
+
+    network = new vis.Network(container, visData, options);
+}
+
+function toggleStatsTable() {
+    const panel = document.getElementById('stats-table-panel');
+    const arrow = document.getElementById('stats-table-arrow');
+    panel.classList.toggle('hidden');
+    arrow.classList.toggle('rotate-90');
+}
+
+async function loadStudentStats() {
+    try {
+        const layers = ['friends', 'helpers', 'teammates', 'leaders', 'trust', 'communication', 'avoidance'];
+        studentStats = {};
+
+        allStudents.forEach(student => {
+            studentStats[student] = {
+                friends: 0, helpers: 0, teammates: 0, leaders: 0,
+                trust: 0, communication: 0, avoidance: 0, total: 0
+            };
+        });
+
+        for (const layer of layers) {
+            try {
+                const response = await fetch(`/api/v1/classroom/${classroomId}/analysis/layer/${layer}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.success && data.network_data?.edges) {
+                        data.network_data.edges.forEach(edge => {
+                            const to = edge.target || edge.to;
+                            if (studentStats[to]) {
+                                studentStats[to][layer]++;
+                                studentStats[to].total++;
+                            }
+                        });
+                    }
+                }
+            } catch (e) {
+                console.log(`Layer ${layer} load failed:`, e);
+            }
+        }
+
+        renderStatsTable();
+    } catch (error) {
+        console.error('Stats load error:', error);
+    }
+}
+
+function renderStatsTable() {
+    const tbody = document.getElementById('stats-table-body');
+
+    const sortedStudents = [...allStudents].sort((a, b) => {
+        return (studentStats[b]?.total || 0) - (studentStats[a]?.total || 0);
+    });
+
+    tbody.innerHTML = sortedStudents.map(student => {
+        const stats = studentStats[student] || {};
+        return `
+            <tr class="border-b border-white/10 hover:bg-white/5">
+                <td class="py-2 px-3 text-white/90 font-medium">${student}</td>
+                <td class="py-2 px-2 text-center ${stats.friends > 0 ? 'text-blue-400' : 'text-white/30'}">${stats.friends || 0}</td>
+                <td class="py-2 px-2 text-center ${stats.helpers > 0 ? 'text-green-400' : 'text-white/30'}">${stats.helpers || 0}</td>
+                <td class="py-2 px-2 text-center ${stats.teammates > 0 ? 'text-cyan-400' : 'text-white/30'}">${stats.teammates || 0}</td>
+                <td class="py-2 px-2 text-center ${stats.leaders > 0 ? 'text-yellow-400' : 'text-white/30'}">${stats.leaders || 0}</td>
+                <td class="py-2 px-2 text-center ${stats.trust > 0 ? 'text-purple-400' : 'text-white/30'}">${stats.trust || 0}</td>
+                <td class="py-2 px-2 text-center ${stats.communication > 0 ? 'text-pink-400' : 'text-white/30'}">${stats.communication || 0}</td>
+                <td class="py-2 px-2 text-center ${stats.avoidance > 0 ? 'text-red-400 font-bold' : 'text-white/30'}">${stats.avoidance || 0}</td>
+                <td class="py-2 px-2 text-center text-white/70 font-medium">${stats.total || 0}</td>
+            </tr>
+        `;
+    }).join('');
+}
+</script>
+
+<style>
+.prose-invert {
+    color: rgba(255, 255, 255, 0.9);
+}
+.prose-invert h2, .prose-invert h3 {
+    color: white;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+}
+.prose-invert p {
+    margin-bottom: 1rem;
+}
+.prose-invert ul, .prose-invert ol {
+    margin-left: 1.5rem;
+    margin-bottom: 1rem;
+}
+.prose-invert li {
+    margin-bottom: 0.5rem;
+}
+.prose-invert strong {
+    color: white;
+    font-weight: 600;
+}
+
+.layer-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.875rem;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+.layer-tab:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.9);
+}
+.layer-tab.active {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+    color: white;
+    font-weight: 500;
+}
+.layer-tab[data-layer="avoidance"] {
+    border-color: rgba(248, 113, 113, 0.3);
+}
+.layer-tab[data-layer="avoidance"]:hover,
+.layer-tab[data-layer="avoidance"].active {
+    background: rgba(248, 113, 113, 0.15);
+    border-color: rgba(248, 113, 113, 0.5);
+}
+</style>
+{% endblock %}

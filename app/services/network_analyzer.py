@@ -202,26 +202,44 @@ class NetworkAnalyzer:
         try:
             # 방향성 그래프를 무방향 그래프로 변환
             undirected_graph = self.graph.to_undirected()
-            
+
+            # Louvain 알고리즘은 음수 가중치를 지원하지 않음
+            # 음수 가중치를 제거하거나 양수로 변환
+            for u, v, data in undirected_graph.edges(data=True):
+                if 'weight' in data and data['weight'] < 0:
+                    # 음수 가중치는 0.1로 설정 (관계가 있지만 약함을 표시)
+                    data['weight'] = 0.1
+
             # Louvain 알고리즘을 사용한 커뮤니티 탐지
-            communities = community_louvain.best_partition(undirected_graph)
-            
+            try:
+                communities = community_louvain.best_partition(undirected_graph)
+            except ValueError as ve:
+                # 여전히 오류가 발생하면 가중치 없이 시도
+                logger.warning(f"가중치 포함 커뮤니티 탐지 실패, 가중치 없이 재시도: {str(ve)}")
+                for u, v, data in undirected_graph.edges(data=True):
+                    data['weight'] = 1
+                communities = community_louvain.best_partition(undirected_graph)
+
             # 커뮤니티 정보 저장
             self.communities = communities
-            
+
             # 커뮤니티별 노드 그룹화
             community_groups = {}
             for node, community_id in communities.items():
                 if community_id not in community_groups:
                     community_groups[community_id] = []
                 community_groups[community_id].append(node)
-            
+
             logger.info(f"커뮤니티 탐지 완료: {len(community_groups)}개 커뮤니티 발견")
             return community_groups
-            
+
         except Exception as e:
             logger.error(f"커뮤니티 탐지 실패: {str(e)}")
-            raise Exception(f"커뮤니티 탐지 중 오류가 발생했습니다: {str(e)}")
+            # 커뮤니티 탐지 실패 시 각 노드를 개별 커뮤니티로 설정
+            self.communities = {node: idx for idx, node in enumerate(self.graph.nodes())}
+            community_groups = {idx: [node] for idx, node in enumerate(self.graph.nodes())}
+            logger.warning(f"커뮤니티 탐지 대안: 각 노드를 개별 커뮤니티로 설정")
+            return community_groups
     
     def identify_isolated_nodes(self, threshold=0.1):
         """소외 학생(연결이 적은 노드) 식별"""
@@ -381,28 +399,25 @@ class NetworkAnalyzer:
         return [(u, v, data.get('weight', 1)) for u, v, data in self.graph.edges(data=True)]
         
     def get_communities(self):
-        """커뮤니티 멤버십 정보 반환"""
+        """커뮤니티 멤버십 정보 반환
+
+        Louvain 알고리즘 결과 {node: community_id}를
+        {community_id: [members]} 형태로 변환하여 반환
+        """
         if not hasattr(self, 'communities') or not self.communities:
             self.detect_communities()
-            
-        # 안전한 복사본 생성 (모든 키를 문자열로 변환)
-        safe_communities = {}
-        
+
+        # {node: comm_id} → {comm_id: [members]} 변환
+        community_groups = {}
+
         if self.communities:
-            for comm_id, members in self.communities.items():
-                # 커뮤니티 ID를 문자열로 변환 (안전한 처리)
-                safe_comm_id = str(comm_id)
-                
-                # 멤버가 리스트인지 확인
-                if isinstance(members, list):
-                    safe_communities[safe_comm_id] = members.copy()
-                elif isinstance(members, set):
-                    safe_communities[safe_comm_id] = list(members)
-                else:
-                    # 단일 값인 경우 리스트로 감싸기
-                    safe_communities[safe_comm_id] = [members]
-        
-        return safe_communities
+            for node, comm_id in self.communities.items():
+                comm_key = str(comm_id)
+                if comm_key not in community_groups:
+                    community_groups[comm_key] = []
+                community_groups[comm_key].append(node)
+
+        return community_groups
         
     def get_community_colors(self):
         """각 노드의 커뮤니티 기반 색상 맵을 반환
@@ -496,18 +511,10 @@ class NetworkAnalyzer:
             # 커뮤니티 정보
             if self.communities is None:
                 self.detect_communities()
-            
-            community_info = {}
-            if self.communities:
-                for comm_id, members in self.communities.items():
-                    # 커뮤니티 멤버가 리스트가 아니라 정수일 수 있으므로 타입 확인
-                    if isinstance(members, list):
-                        community_info[comm_id] = len(members)
-                    else:
-                        # 리스트가 아니면 개수를 1로 설정
-                        community_info[comm_id] = 1
-                        # 정수를 리스트로 변환하여 일관성 유지
-                        self.communities[comm_id] = [str(members)]
+
+            # get_communities()를 사용하여 올바른 형태로 변환
+            community_groups = self.get_communities()
+            community_info = {comm_id: len(members) for comm_id, members in community_groups.items()}
             
             # 요약 텍스트 생성
             summary = []
@@ -532,19 +539,16 @@ class NetworkAnalyzer:
             if community_info:
                 summary.append(f"\n### 그룹 분석")
                 summary.append(f"- **발견된 그룹 수**: {len(community_info)}개")
-                
+
                 for comm_id, size in community_info.items():
-                    members = self.communities[comm_id]
-                    # members가 리스트인지 확인
-                    if isinstance(members, list):
-                        # 최대 5개 멤버만 표시
-                        display_members = members[:5]
-                        # 더 많은 멤버가 있으면 '...' 추가
-                        ellipsis = ', ...' if len(members) > 5 else ''
-                        summary.append(f"- **그룹 {comm_id}**: {size}명 ({', '.join(display_members)}{ellipsis})")
-                    else:
-                        # 리스트가 아닌 경우
-                        summary.append(f"- **그룹 {comm_id}**: 1명 ({members})")
+                    members = community_groups.get(comm_id, [])
+                    # 최대 5개 멤버만 표시
+                    display_members = members[:5]
+                    # 더 많은 멤버가 있으면 '...' 추가
+                    ellipsis = ', ...' if len(members) > 5 else ''
+                    # 그룹 번호를 1부터 시작하도록 표시
+                    display_num = int(comm_id) + 1 if comm_id.isdigit() else comm_id
+                    summary.append(f"- **그룹 {display_num}**: {size}명 ({', '.join(str(m) for m in display_members)}{ellipsis})")
             
             return "\n".join(summary)
             

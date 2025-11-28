@@ -39,9 +39,9 @@ class Config:
     UPLOAD_FOLDER = os.environ.get('UPLOAD_FOLDER', 'uploads')
     ALLOWED_EXTENSIONS = {'csv', 'xlsx', 'xls'}
 
-    # Google API (Gemini 등)
-    GOOGLE_API_KEYS = os.environ.get('GOOGLE_API_KEYS', '').split(',')
-    GEMINI_MODEL = 'gemini-2.0-flash'
+    # Upstage Solar API
+    UPSTAGE_API_KEY = os.environ.get('UPSTAGE_API_KEY', '')
+    UPSTAGE_MODEL = os.environ.get('UPSTAGE_MODEL', 'solar-pro2')
 
     # 애플리케이션 설정
     APP_NAME = '학급 관계 네트워크 분석 시스템 (Class-SNA)'
@@ -53,6 +53,15 @@ class Config:
 
     # CORS
     CORS_ORIGINS = os.environ.get('CORS_ORIGINS', '*')
+
+    # i18n (Flask-Babel)
+    BABEL_DEFAULT_LOCALE = 'ko'
+    BABEL_SUPPORTED_LOCALES = ['ko', 'en']
+    BABEL_TRANSLATION_DIRECTORIES = 'translations'
+    LANGUAGES = {
+        'ko': '한국어',
+        'en': 'English'
+    }
 
 
 class DevelopmentConfig(Config):
@@ -86,7 +95,7 @@ class ProductionConfig(Config):
     SESSION_COOKIE_SAMESITE = 'Lax'
 
     # CORS (프로덕션에서는 특정 도메인만)
-    CORS_ORIGINS = os.environ.get('CORS_ORIGINS', 'https://관계.성장.com')
+    CORS_ORIGINS = os.environ.get('CORS_ORIGINS', 'https://class-sna.com')
 
 
 class TestingConfig(Config):

@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+{% block title %}{{ _('교사 목록') }}{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 py-8">
+    <!-- 헤더 -->
+    <div class="mb-8">
+        <div class="flex items-center gap-4 mb-4">
+            <a href="{{ url_for('admin.dashboard') }}" class="text-white/60 hover:text-white">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                </svg>
+            </a>
+            <h1 class="text-3xl font-bold text-white">{{ _('교사 목록') }}</h1>
+        </div>
+        <p class="text-white/70">{{ _('전체 등록 교사 관리') }} ({{ teachers|length }}{{ _('명') }})</p>
+    </div>
+
+    <!-- 검색 및 필터 -->
+    <div class="glass rounded-2xl p-4 mb-6">
+        <div class="flex flex-col md:flex-row gap-4">
+            <div class="flex-1">
+                <input type="text" id="search-input" placeholder="{{ _('이름 또는 이메일로 검색...') }}"
+                       class="w-full px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:border-primary-400">
+            </div>
+            <div class="flex gap-2">
+                <select id="filter-status" class="px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:border-primary-400">
+                    <option value="all">{{ _('전체') }}</option>
+                    <option value="active">{{ _('활성') }} (7{{ _('일 내 로그인') }})</option>
+                    <option value="inactive">{{ _('비활성') }}</option>
+                    <option value="admin">{{ _('관리자') }}</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- 교사 목록 테이블 -->
+    <div class="glass rounded-2xl p-6 overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full" id="teachers-table">
+                <thead>
+                    <tr class="text-left text-white/60 text-sm border-b border-white/10">
+                        <th class="pb-3 pr-4">{{ _('교사') }}</th>
+                        <th class="pb-3 pr-4">{{ _('이메일') }}</th>
+                        <th class="pb-3 pr-4">{{ _('가입일') }}</th>
+                        <th class="pb-3 pr-4">{{ _('마지막 로그인') }}</th>
+                        <th class="pb-3 pr-4">{{ _('학급') }}</th>
+                        <th class="pb-3 pr-4">{{ _('학생') }}</th>
+                        <th class="pb-3">{{ _('상태') }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for teacher in teachers %}
+                    <tr class="border-b border-white/5 text-white/80 hover:bg-white/5 teacher-row"
+                        data-name="{{ teacher.name }}"
+                        data-email="{{ teacher.email }}"
+                        data-admin="{{ 'yes' if teacher.is_admin else 'no' }}"
+                        data-active="{{ 'yes' if teacher.last_login and (now - teacher.last_login).days <= 7 else 'no' }}">
+                        <td class="py-4 pr-4">
+                            <div class="flex items-center gap-3">
+                                {% if teacher.profile_picture %}
+                                <img src="{{ teacher.profile_picture }}" alt="" class="w-10 h-10 rounded-full">
+                                {% else %}
+                                <div class="w-10 h-10 rounded-full bg-primary-500/30 flex items-center justify-center">
+                                    <span class="text-sm text-white">{{ teacher.name[0] }}</span>
+                                </div>
+                                {% endif %}
+                                <div>
+                                    <div class="font-medium text-white">{{ teacher.name }}</div>
+                                    {% if teacher.is_admin %}
+                                    <span class="text-xs bg-purple-500/30 text-purple-300 px-2 py-0.5 rounded">Admin</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </td>
+                        <td class="py-4 pr-4">{{ teacher.email }}</td>
+                        <td class="py-4 pr-4">
+                            {{ teacher.created_at.strftime('%Y-%m-%d') if teacher.created_at else '-' }}
+                        </td>
+                        <td class="py-4 pr-4">
+                            {% if teacher.last_login %}
+                                {{ teacher.last_login.strftime('%Y-%m-%d %H:%M') }}
+                            {% else %}
+                                <span class="text-white/40">{{ _('없음') }}</span>
+                            {% endif %}
+                        </td>
+                        <td class="py-4 pr-4">
+                            <span class="bg-green-500/20 text-green-300 px-2 py-1 rounded text-sm">
+                                {{ teacher.classrooms.count() }}
+                            </span>
+                        </td>
+                        <td class="py-4 pr-4">
+                            <span class="bg-yellow-500/20 text-yellow-300 px-2 py-1 rounded text-sm">
+                                {% set total_students = [] %}
+                                {% for c in teacher.classrooms %}
+                                    {% set _ = total_students.append(c.students.count()) %}
+                                {% endfor %}
+                                {{ total_students|sum }}
+                            </span>
+                        </td>
+                        <td class="py-4">
+                            {% if teacher.last_login and (now - teacher.last_login).days <= 7 %}
+                            <span class="flex items-center gap-1 text-green-400">
+                                <span class="w-2 h-2 bg-green-400 rounded-full"></span>
+                                {{ _('활성') }}
+                            </span>
+                            {% elif teacher.last_login and (now - teacher.last_login).days <= 30 %}
+                            <span class="flex items-center gap-1 text-yellow-400">
+                                <span class="w-2 h-2 bg-yellow-400 rounded-full"></span>
+                                {{ _('보통') }}
+                            </span>
+                            {% else %}
+                            <span class="flex items-center gap-1 text-white/40">
+                                <span class="w-2 h-2 bg-white/40 rounded-full"></span>
+                                {{ _('비활성') }}
+                            </span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% if not teachers %}
+        <div class="text-center py-12 text-white/60">
+            <svg class="w-16 h-16 mx-auto mb-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+            </svg>
+            <p>{{ _('등록된 교사가 없습니다.') }}</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// 검색 기능
+document.getElementById('search-input').addEventListener('input', filterTeachers);
+document.getElementById('filter-status').addEventListener('change', filterTeachers);
+
+function filterTeachers() {
+    const searchTerm = document.getElementById('search-input').value.toLowerCase();
+    const filterStatus = document.getElementById('filter-status').value;
+    const rows = document.querySelectorAll('.teacher-row');
+
+    rows.forEach(row => {
+        const name = row.dataset.name.toLowerCase();
+        const email = row.dataset.email.toLowerCase();
+        const isAdmin = row.dataset.admin === 'yes';
+        const isActive = row.dataset.active === 'yes';
+
+        let matchSearch = name.includes(searchTerm) || email.includes(searchTerm);
+        let matchFilter = true;
+
+        if (filterStatus === 'active') {
+            matchFilter = isActive;
+        } else if (filterStatus === 'inactive') {
+            matchFilter = !isActive;
+        } else if (filterStatus === 'admin') {
+            matchFilter = isAdmin;
+        }
+
+        row.style.display = matchSearch && matchFilter ? '' : 'none';
+    });
+}
+</script>
+{% endblock %}

@@ -1,0 +1,352 @@
+key,ko,en,vi,ru,context,file
+# 네비게이션 (nav.*)
+nav.home,홈,Home,,,Navigation menu,base.html
+nav.survey,설문 진행,Take Survey,,,Student navigation,base.html
+nav.exit,나가기,Exit,,,Student exit link,base.html
+nav.my_classes,내 학급,My Classes,,,Teacher navigation,base.html
+nav.analysis_results,분석 결과,Analysis Results,,,Teacher navigation,base.html
+nav.admin,관리,Admin,,,Admin navigation,base.html
+nav.logout,로그아웃,Logout,,,User logout,base.html
+nav.join_class,학급 참여,Join Class,,,Student join class,base.html
+nav.teacher_login,교사 로그인,Teacher Login,,,Teacher login button,base.html
+
+# 공통 버튼 (btn.*)
+btn.submit,제출,Submit,,,Form submission,common
+btn.cancel,취소,Cancel,,,Cancel action,common
+btn.save,저장,Save,,,Save action,common
+btn.delete,삭제,Delete,,,Delete action,common
+btn.edit,수정,Edit,,,Edit action,common
+btn.confirm,확인,Confirm,,,Confirmation,common
+btn.close,닫기,Close,,,Close modal/dialog,common
+btn.next,다음,Next,,,Pagination next,common
+btn.previous,이전,Previous,,,Pagination previous,common
+btn.create,생성,Create,,,Create action,common
+btn.copy,복사,Copy,,,Copy to clipboard,common
+btn.get_started,시작하기,Get Started,,,Call to action,index.html
+btn.learn_more,더 알아보기,Learn More,,,Info link,index.html
+btn.participate,참여하기,Participate,,,Join action,join.html
+btn.select_complete,선택 완료,Selection Complete,,,Confirm selection,select_name.html
+
+# 상태 메시지 (status.*)
+status.loading,로딩 중...,Loading...,,,Loading indicator,common
+status.analyzing,분석 중...,Analyzing...,,,Analysis loading,base.html
+status.survey_active,설문 진행중,Survey Active,,,Survey status,teacher_dashboard.html
+status.survey_pending,설문 대기,Survey Pending,,,Survey status,teacher_dashboard.html
+status.response_complete,응답완료,Response Complete,,,Response status,teacher_dashboard.html
+status.in_progress,진행중,In Progress,,,Progress status,onboarding.html
+
+# 페이지 제목 (title.*)
+title.home,홈,Home,,,Page title,index.html
+title.survey,설문,Survey,,,Survey page title,survey.html
+title.teacher_dashboard,교사 대시보드,Teacher Dashboard,,,Dashboard title,teacher_dashboard.html
+title.upload,데이터 업로드,Data Upload,,,Upload page title,upload.html
+title.join,학급 참여,Join Class,,,Join page title,join.html
+title.select_name,이름 선택,Select Name,,,Name selection title,select_name.html
+title.survey_complete,설문 완료,Survey Complete,,,Completion page title,survey_complete.html
+title.teacher_verify,교사 인증,Teacher Verification,,,Verification title,teacher_verify.html
+title.analysis_result,분석 결과,Analysis Results,,,Results page title,classroom_result.html
+
+# 인덱스 페이지 (index.*)
+index.title,학급 관계 네트워크 분석 시스템,Class Social Network Analysis System,,,Main title,index.html
+index.subtitle,설문조사 데이터를 기반으로 학생들 간의 사회적 관계를 시각화하고 분석합니다. 인기도, 영향력, 그룹 구조를 파악하여 건강한 학급 운영을 지원합니다.,Visualize and analyze social relationships between students based on survey data. Support healthy classroom management by understanding popularity; influence; and group structures.,,,Main description,index.html
+index.manage_classes,내 학급 관리,Manage My Classes,,,Teacher CTA,index.html
+index.join_as_student,학급 참여 (학생),Join Class (Student),,,Student CTA,index.html
+index.feature_network,네트워크 시각화,Network Visualization,,,Feature card title,index.html
+index.feature_network_desc,학생들 간의 관계를 인터랙티브 네트워크 그래프로 시각화합니다.,Visualize relationships between students as interactive network graphs.,,,Feature description,index.html
+index.feature_centrality,중심성 분석,Centrality Analysis,,,Feature card title,index.html
+index.feature_centrality_desc,인기도, 활동성, 영향력 등 다양한 중심성 지표를 계산합니다.,Calculate various centrality metrics including popularity; activity; and influence.,,,Feature description,index.html
+index.feature_groups,그룹 탐지,Group Detection,,,Feature card title,index.html
+index.feature_groups_desc,커뮤니티 탐지 알고리즘으로 자연스러운 그룹을 발견합니다.,Discover natural groups using community detection algorithms.,,,Feature description,index.html
+index.how_to_use,사용 방법,How to Use,,,Section title,index.html
+index.step1_title,학급 생성,Create Class,,,Step title,index.html
+index.step1_desc,교사가 학급을 만들고 학생 명단을 등록합니다.,Teacher creates a class and registers student list.,,,Step description,index.html
+index.step2_title,학생 참여,Student Participation,,,Step title,index.html
+index.step2_desc,학생들이 참여코드로 입장해 설문에 응답합니다.,Students enter with participation code and respond to survey.,,,Step description,index.html
+index.step3_title,분석 시작,Start Analysis,,,Step title,index.html
+index.step3_desc,응답 수집 완료 후 분석 버튼을 눌러 관계를 분석합니다.,After collecting responses; click analyze to examine relationships.,,,Step description,index.html
+index.step4_title,결과 확인,View Results,,,Step title,index.html
+index.step4_desc,네트워크 시각화와 AI 해석 결과를 확인합니다.,Check network visualization and AI interpretation results.,,,Step description,index.html
+
+# 설문 페이지 (survey.*)
+survey.title,설문,Survey,,,Survey page heading,survey.html
+survey.greeting,님, 아래 질문에 답해주세요,; please answer the questions below,,,Survey greeting suffix,survey.html
+survey.selected_count,선택된 친구:,Selected friends:,,,Selection counter,survey.html
+survey.q1_title,친하게 지내고 싶은 친구를 선택해주세요 (최대 5명),Select friends you want to be close with (max 5),,,Question 1,survey.html
+survey.q2_title,공부나 과제할 때 도움을 주는 친구를 선택해주세요 (최대 3명),Select friends who help with studies or assignments (max 3),,,Question 2,survey.html
+survey.q3_title,모둠 활동을 함께 하고 싶은 친구를 선택해주세요 (최대 3명),Select friends you want to do group activities with (max 3),,,Question 3,survey.html
+survey.q4_title,반에서 의견을 잘 이끄는 친구를 선택해주세요 (최대 3명),Select friends who lead opinions well in class (max 3),,,Question 4,survey.html
+survey.q5_title,비밀을 털어놓을 수 있는 친구를 선택해주세요 (최대 3명),Select friends you can confide secrets to (max 3),,,Question 5,survey.html
+survey.q6_title,자주 대화하는 친구를 선택해주세요 (최대 3명),Select friends you talk to often (max 3),,,Question 6,survey.html
+survey.q7_title,함께 활동하기 어려운 친구를 선택해주세요 (최대 2명, 선택 안해도 됨),Select friends difficult to work with (max 2; optional),,,Question 7,survey.html
+survey.q7_notice,* 이 정보는 모둠 구성 참고용으로만 사용되며, 다른 학생에게 공개되지 않습니다.,* This information is only used for group composition reference and is not disclosed to other students.,,,Privacy notice,survey.html
+survey.submit_button,설문 제출하기,Submit Survey,,,Submit button,survey.html
+
+# 교사 대시보드 (dashboard.*)
+dashboard.title,내 학급 관리,Manage My Classes,,,Dashboard title,teacher_dashboard.html
+dashboard.greeting,안녕하세요,Hello,,,Greeting prefix,teacher_dashboard.html
+dashboard.new_class,새 학급 만들기,Create New Class,,,Create class button,teacher_dashboard.html
+dashboard.student_count,학생 수,Number of Students,,,Stats label,teacher_dashboard.html
+dashboard.response_count,응답 완료,Responses Complete,,,Stats label,teacher_dashboard.html
+dashboard.manage,관리,Manage,,,Action button,teacher_dashboard.html
+dashboard.start_survey,설문 시작,Start Survey,,,Action button,teacher_dashboard.html
+dashboard.end_survey,설문 종료,End Survey,,,Action button,teacher_dashboard.html
+dashboard.analyze,분석하기,Analyze,,,Action button,teacher_dashboard.html
+dashboard.empty_guide,위의 가이드를 따라 학급을 생성해주세요.,Please follow the guide above to create a class.,,,Empty state,teacher_dashboard.html
+
+# 학급 생성 모달 (modal.create.*)
+modal.create.title,새 학급 만들기,Create New Class,,,Modal title,teacher_dashboard.html
+modal.create.class_name,학급 이름,Class Name,,,Form label,teacher_dashboard.html
+modal.create.class_name_placeholder,예: 3학년 2반,e.g.: Grade 3 Class 2,,,Placeholder,teacher_dashboard.html
+modal.create.description,설명 (선택),Description (Optional),,,Form label,teacher_dashboard.html
+modal.create.description_placeholder,학급에 대한 설명,Description of the class,,,Placeholder,teacher_dashboard.html
+
+# 학급 관리 모달 (modal.manage.*)
+modal.manage.title,학급 관리,Class Management,,,Modal title,teacher_dashboard.html
+modal.manage.share_code,학생들에게 이 코드를 공유하세요,Share this code with students,,,Instruction,teacher_dashboard.html
+modal.manage.join_url,참여 URL:,Join URL:,,,Label,teacher_dashboard.html
+modal.manage.student_list,학생 명단,Student List,,,Section title,teacher_dashboard.html
+modal.manage.download_template,양식 다운로드,Download Template,,,Link text,teacher_dashboard.html
+modal.manage.file_upload,파일 업로드,File Upload,,,Button text,teacher_dashboard.html
+modal.manage.add_student,학생 추가,Add Student,,,Button text,teacher_dashboard.html
+modal.manage.no_students,등록된 학생이 없습니다.,No students registered.,,,Empty state,teacher_dashboard.html
+modal.manage.delete_class,학급 삭제,Delete Class,,,Danger action,teacher_dashboard.html
+modal.manage.reset,초기화,Reset,,,Reset response,teacher_dashboard.html
+
+# 학생 추가 모달 (modal.students.*)
+modal.students.title,학생 추가,Add Students,,,Modal title,teacher_dashboard.html
+modal.students.names_label,학생 이름,Student Names,,,Form label,teacher_dashboard.html
+modal.students.names_placeholder,학생 이름을 입력하세요\n(엔터로 줄바꿈하여 여러 명 입력 가능)\n\n예시:\n김철수\n이영희\n박지성,Enter student names\n(Enter multiple names on separate lines)\n\nExample:\nCheolsu Kim\nYounghee Lee\nJisung Park,,,Placeholder,teacher_dashboard.html
+modal.students.names_hint,한 줄에 한 명씩 입력하세요,Enter one name per line,,,Hint text,teacher_dashboard.html
+
+# 학급 참여 (join.*)
+join.title,학급 참여,Join Class,,,Page title,join.html
+join.instruction,선생님이 알려주신 학급 코드를 입력하세요,Enter the class code provided by your teacher,,,Instruction,join.html
+join.code_label,학급 코드,Class Code,,,Form label,join.html
+join.code_placeholder,예: ABC123,e.g.: ABC123,,,Placeholder,join.html
+join.code_hint,6자리 영문/숫자 코드,6-character alphanumeric code,,,Hint,join.html
+join.no_code,학급 코드가 없으신가요?,Don't have a class code?,,,Help text,join.html
+join.contact_teacher,선생님께 문의해주세요.,Please contact your teacher.,,,Help text,join.html
+
+# 이름 선택 (select.*)
+select.title,본인의 이름을 선택해주세요,Please select your name,,,Instruction,select_name.html
+select.class_code,학급 코드:,Class Code:,,,Label,select_name.html
+select.number_suffix,번,No.,,,Student number suffix,select_name.html
+select.no_students,선택 가능한 학생이 없습니다.,No students available for selection.,,,Empty state,select_name.html
+select.all_responded,모든 학생이 이미 응답을 완료했거나, 아직 학생 명단이 등록되지 않았습니다.,All students have already responded; or the student list has not been registered yet.,,,Empty state detail,select_name.html
+select.other_code,다른 학급 코드 입력,Enter another class code,,,Link text,select_name.html
+
+# 설문 완료 (complete.*)
+complete.title,설문 완료!,Survey Complete!,,,Title,survey_complete.html
+complete.thanks,님, 설문에 참여해주셔서 감사합니다.,; thank you for participating in the survey.,,,Thanks message suffix,survey_complete.html
+complete.recorded,소중한 의견이 반영되었습니다.,Your valuable feedback has been recorded.,,,Confirmation,survey_complete.html
+complete.go_home,홈으로 돌아가기,Return to Home,,,Link text,survey_complete.html
+complete.close_notice,이 창을 닫으셔도 됩니다.,You may close this window.,,,Notice,survey_complete.html
+
+# 교사 인증 (verify.*)
+verify.title,교사 인증,Teacher Verification,,,Page title,teacher_verify.html
+verify.instruction,교사 전용 가입 코드를 입력해주세요,Please enter the teacher registration code,,,Instruction,teacher_verify.html
+verify.code_label,가입 코드,Registration Code,,,Form label,teacher_verify.html
+verify.code_placeholder,가입 코드를 입력하세요,Enter registration code,,,Placeholder,teacher_verify.html
+verify.code_hint,가입 코드는 학교 관리자에게 문의하세요.,Please contact your school administrator for the registration code.,,,Hint,teacher_verify.html
+verify.button,인증 후 Google 로그인,Verify and Google Login,,,Button text,teacher_verify.html
+verify.back_home,← 홈으로 돌아가기,← Return to Home,,,Link text,teacher_verify.html
+
+# 온보딩 (onboarding.*)
+onboarding.title,학급 관계 분석 시작하기,Start Classroom Relationship Analysis,,,Section title,onboarding.html
+onboarding.instruction,아래 단계를 따라 학급 관계 분석을 진행해주세요,Please follow the steps below to analyze classroom relationships,,,Instruction,onboarding.html
+onboarding.step1,학급 생성,Create Class,,,Step 1 title,onboarding.html
+onboarding.step1_done,학급 생성 완료,Class Created,,,Step 1 complete,onboarding.html
+onboarding.step1_pending,새 학급을 만들어 시작하세요,Create a new class to get started,,,Step 1 pending,onboarding.html
+onboarding.step1_btn,학급 만들기,Create Class,,,Button,onboarding.html
+onboarding.step2,학생 명단 등록,Register Student List,,,Step 2 title,onboarding.html
+onboarding.step2_done,명 등록 완료, students registered,,,Step 2 complete suffix,onboarding.html
+onboarding.step2_pending,학생 명단을 업로드하거나 직접 추가하세요,Upload student list or add manually,,,Step 2 pending,onboarding.html
+onboarding.step2_locked,학급 생성 후 진행 가능,Available after class creation,,,Step 2 locked,onboarding.html
+onboarding.step2_btn,학생 추가,Add Students,,,Button,onboarding.html
+onboarding.step3,설문 응답 수집,Collect Survey Responses,,,Step 3 title,onboarding.html
+onboarding.step3_done,명 응답 완료, responses complete,,,Step 3 complete suffix,onboarding.html
+onboarding.step3_pending,학급 코드를 학생들에게 공유하세요,Share class code with students,,,Step 3 pending suffix,onboarding.html
+onboarding.step3_locked,학생 등록 후 진행 가능,Available after student registration,,,Step 3 locked,onboarding.html
+onboarding.step3_code_copy,코드 복사,Copy Code,,,Button,onboarding.html
+onboarding.step4,관계 분석 실행,Run Relationship Analysis,,,Step 4 title,onboarding.html
+onboarding.step4_done,분석 완료,Analysis Complete,,,Step 4 complete,onboarding.html
+onboarding.step4_pending,응답 데이터를 분석하여 관계 네트워크를 생성합니다,Analyze response data to generate relationship network,,,Step 4 pending,onboarding.html
+onboarding.step4_locked,설문 응답 수집 후 진행 가능,Available after survey responses collected,,,Step 4 locked,onboarding.html
+onboarding.step4_btn,분석 시작,Start Analysis,,,Button,onboarding.html
+onboarding.help,학생들은 학급 코드를 입력하여 설문에 참여할 수 있습니다. 충분한 응답이 수집되면 네트워크 분석을 실행해주세요.,Students can participate in surveys by entering the class code. Please run network analysis after sufficient responses are collected.,,,Help text,onboarding.html
+
+# 분석 결과 (analysis.*)
+analysis.breadcrumb_classes,내 학급,My Classes,,,Breadcrumb,classroom_result.html
+analysis.breadcrumb_result,분석 결과,Analysis Results,,,Breadcrumb,classroom_result.html
+analysis.title_suffix,관계 분석, Relationship Analysis,,,Title suffix,classroom_result.html
+analysis.analysis_date,분석 일시:,Analysis Date:,,,Label,classroom_result.html
+analysis.unknown_date,알 수 없음,Unknown,,,Fallback,classroom_result.html
+analysis.rerun,다시 분석,Re-analyze,,,Button,classroom_result.html
+analysis.to_dashboard,대시보드로,To Dashboard,,,Button,classroom_result.html
+
+# 회피 경고 (warning.*)
+warning.urgent,긴급,Urgent,,,Badge,classroom_result.html
+warning.conflict_title,관계 갈등 경고,Relationship Conflict Warning,,,Warning title,classroom_result.html
+warning.details,자세히 보기 →,View Details →,,,Link,classroom_result.html
+warning.avoidance_title,회피 관계 분석,Avoidance Relationship Analysis,,,Section title,classroom_result.html
+warning.mutual_avoidance,상호 회피,Mutual Avoidance,,,Stat label,classroom_result.html
+warning.avoidance_target,회피 대상자,Avoidance Targets,,,Stat label,classroom_result.html
+warning.total_warnings,총 경고,Total Warnings,,,Stat label,classroom_result.html
+warning.students_involved,관련 학생,Students Involved,,,Stat label,classroom_result.html
+warning.risk_critical,위험,Critical,,,Risk level,classroom_result.html
+warning.risk_high,주의,High,,,Risk level,classroom_result.html
+warning.risk_moderate,관심필요,Moderate,,,Risk level,classroom_result.html
+warning.risk_low,양호,Low,,,Risk level,classroom_result.html
+
+# AI 해석 (ai.*)
+ai.title,AI 분석 해석,AI Analysis Interpretation,,,Section title,classroom_result.html
+ai.loading,AI 해석을 불러오는 중...,Loading AI interpretation...,,,Loading text,classroom_result.html
+ai.saved_notice,저장된 분석 결과입니다. AI 해석을 보려면 "다시 분석" 버튼을 클릭하세요.,This is a saved analysis result. Click "Re-analyze" to see AI interpretation.,,,Notice,classroom_result.html
+
+# 통계 (stats.*)
+stats.total_students,전체 학생,Total Students,,,Stat label,classroom_result.html
+stats.total_edges,관계 수,Relationships,,,Stat label,classroom_result.html
+stats.groups_found,발견된 그룹,Groups Found,,,Stat label,classroom_result.html
+stats.network_density,네트워크 밀도,Network Density,,,Stat label,classroom_result.html
+
+# 네트워크 (network.*)
+network.title,관계 네트워크,Relationship Network,,,Section title,classroom_result.html
+network.reset,초기화,Reset,,,Button,classroom_result.html
+network.layer_all,전체 네트워크,All Network,,,Layer tab,classroom_result.html
+network.layer_friends,친한 친구,Close Friends,,,Layer tab,classroom_result.html
+network.layer_helpers,도움 친구,Helping Friends,,,Layer tab,classroom_result.html
+network.layer_teammates,협력 친구,Teamwork Friends,,,Layer tab,classroom_result.html
+network.layer_leaders,리더십,Leadership,,,Layer tab,classroom_result.html
+network.layer_trust,신뢰 친구,Trust Friends,,,Layer tab,classroom_result.html
+network.layer_communication,소통 잘함,Good Communication,,,Layer tab,classroom_result.html
+network.layer_avoidance,회피 관계,Avoidance,,,Layer tab,classroom_result.html
+network.student_filter,학생 필터,Student Filter,,,Toggle label,classroom_result.html
+network.all_selected,(전체 선택됨),(All Selected),,,Filter count,classroom_result.html
+network.selected_count,명 선택, selected,,,Filter count suffix,classroom_result.html
+network.select_all,전체 선택,Select All,,,Button,classroom_result.html
+network.deselect_all,전체 해제,Deselect All,,,Button,classroom_result.html
+network.apply_filter,필터 적용,Apply Filter,,,Button,classroom_result.html
+network.nodes,노드,Nodes,,,Stat,classroom_result.html
+network.connections,연결,Connections,,,Stat,classroom_result.html
+network.no_data,관계 데이터가 없습니다.,No relationship data available.,,,Empty state,classroom_result.html
+
+# 중심성 분석 (centrality.*)
+centrality.in_degree_title,인기도 순위 (In-Degree),Popularity Ranking (In-Degree),,,Section title,classroom_result.html
+centrality.in_degree_desc,다른 학생들이 많이 선택한 학생,Students chosen by many others,,,Description,classroom_result.html
+centrality.betweenness_title,매개 중심성 순위 (Betweenness),Betweenness Centrality Ranking,,,Section title,classroom_result.html
+centrality.betweenness_desc,서로 다른 그룹을 연결하는 학생,Students connecting different groups,,,Description,classroom_result.html
+
+# 커뮤니티 (community.*)
+community.title,그룹(커뮤니티) 분석,Group (Community) Analysis,,,Section title,classroom_result.html
+community.group_prefix,그룹,Group,,,Group name prefix,classroom_result.html
+community.members_suffix,명, members,,,Members count suffix,classroom_result.html
+community.no_groups,아직 명확한 그룹이 형성되지 않았습니다.,No clear groups have formed yet.,,,Empty state,classroom_result.html
+community.need_more,더 많은 학생들의 설문 응답이 필요합니다.,More student survey responses are needed.,,,Empty state detail,classroom_result.html
+
+# 통계 테이블 (table.*)
+table.toggle_title,관계 유형별 통계 표,Relationship Statistics by Type,,,Toggle label,classroom_result.html
+table.student,학생,Student,,,Column header,classroom_result.html
+table.friends,친한친구,Friends,,,Column header,classroom_result.html
+table.help,도움,Help,,,Column header,classroom_result.html
+table.teamwork,협력,Teamwork,,,Column header,classroom_result.html
+table.leadership,리더십,Leadership,,,Column header,classroom_result.html
+table.trust,신뢰,Trust,,,Column header,classroom_result.html
+table.communication,소통,Communication,,,Column header,classroom_result.html
+table.avoidance,회피,Avoidance,,,Column header,classroom_result.html
+table.total,합계,Total,,,Column header,classroom_result.html
+table.note,* 각 숫자는 해당 학생이 다른 학생들로부터 받은 선택 수입니다.,* Each number indicates selections received from other students.,,,Table note,classroom_result.html
+
+# 범례 (legend.*)
+legend.group1,그룹 1,Group 1,,,Legend item,classroom_result.html
+legend.group2,그룹 2,Group 2,,,Legend item,classroom_result.html
+legend.group3,그룹 3,Group 3,,,Legend item,classroom_result.html
+legend.group4_plus,그룹 4+,Group 4+,,,Legend item,classroom_result.html
+legend.avoidance_line,회피 관계 (한 방향),Avoidance (One-way),,,Legend item,classroom_result.html
+legend.avoidance_student,회피 관계 관련 학생,Avoidance-related Students,,,Legend item,classroom_result.html
+
+# 업로드 페이지 (upload.*)
+upload.title,데이터 업로드,Data Upload,,,Page title,upload.html
+upload.subtitle,설문조사 데이터를 업로드하여 네트워크 분석을 시작하세요.,Upload survey data to start network analysis.,,,Subtitle,upload.html
+upload.sheet_title,구글 시트 URL,Google Sheet URL,,,Section title,upload.html
+upload.sheet_label,시트 URL,Sheet URL,,,Form label,upload.html
+upload.sheet_placeholder,https://docs.google.com/spreadsheets/d/...,https://docs.google.com/spreadsheets/d/...,,,Placeholder,upload.html
+upload.sheet_hint,공개 설정된 구글 시트 URL을 입력하세요.,Enter publicly accessible Google Sheet URL.,,,Hint,upload.html
+upload.load_button,불러오기,Load,,,Button,upload.html
+upload.file_title,파일 업로드,File Upload,,,Section title,upload.html
+upload.drop_zone,파일을 드래그하거나 클릭하여 선택,Drag file or click to select,,,Drop zone text,upload.html
+upload.file_types,CSV, Excel 파일 지원,CSV; Excel files supported,,,File types,upload.html
+upload.upload_analyze,업로드 및 분석,Upload and Analyze,,,Button,upload.html
+upload.example_title,예시 데이터로 시작하기,Start with Example Data,,,Section title,upload.html
+upload.example_desc,처음이시라면 예시 데이터로 기능을 체험해보세요.,If you're new; try the features with example data.,,,Description,upload.html
+upload.example1,예시 1: 친구 관계,Example 1: Friendships,,,Button,upload.html
+upload.example2,예시 2: 협업 선호도,Example 2: Collaboration Preferences,,,Button,upload.html
+upload.format_title,데이터 형식 안내,Data Format Guide,,,Section title,upload.html
+upload.format_col1,타임스탬프,Timestamp,,,Table header,upload.html
+upload.format_col2,이름,Name,,,Table header,upload.html
+upload.format_col3,좋아하는 친구,Favorite Friends,,,Table header,upload.html
+upload.format_col4,함께 공부하고 싶은 친구,Friends to Study With,,,Table header,upload.html
+upload.format_note,* 여러 명을 선택한 경우 세미콜론(;)으로 구분합니다.,* Use semicolons (;) to separate multiple selections.,,,Note,upload.html
+
+# 쿠키 동의 (cookie.*)
+cookie.title,쿠키 사용 안내,Cookie Notice,,,Banner title,base.html
+cookie.message,이 웹사이트는 더 나은 서비스 제공을 위해 쿠키를 사용합니다. 계속 이용하시면 쿠키 사용에 동의하는 것으로 간주됩니다.,This website uses cookies for better service. By continuing to use this site; you consent to our use of cookies.,,,Banner message,base.html
+cookie.learn_more,자세히 알아보기,Learn more,,,Link,base.html
+cookie.accept,동의,Accept,,,Button,base.html
+cookie.decline,거절,Decline,,,Button,base.html
+
+# 푸터 (footer.*)
+footer.copyright,학급 관계 네트워크 분석 시스템,Class Social Network Analysis System,,,Footer text,base.html
+footer.author,공지훈,Jihun Kong,,,Author name,base.html
+footer.privacy,개인정보 처리방침,Privacy Policy,,,Link,base.html
+footer.terms,이용약관,Terms of Service,,,Link,base.html
+footer.consent,동의서 다운로드,Download Consent Form,,,Link,base.html
+
+# JavaScript 메시지 (js.*)
+js.loading,로딩 중...,Loading...,,,Toast message,common
+js.error.generic,오류가 발생했습니다.,An error occurred.,,,Toast message,common
+js.error.network,네트워크 오류가 발생했습니다.,A network error occurred.,,,Toast message,common
+js.error.auth,권한이 없습니다.,You do not have permission.,,,Toast message,common
+js.success.saved,성공적으로 저장되었습니다.,Successfully saved.,,,Toast message,common
+js.success.deleted,삭제되었습니다.,Deleted.,,,Toast message,common
+js.success.copied,복사되었습니다.,Copied.,,,Toast message,common
+js.classroom.created,학급이 생성되었습니다.,Class created.,,,Toast message,teacher_dashboard.html
+js.classroom.deleted,학급이 삭제되었습니다.,Class deleted.,,,Toast message,teacher_dashboard.html
+js.classroom.code_copied,학급 코드가 복사되었습니다:,Class code copied:,,,Toast message,teacher_dashboard.html
+js.student.added,학생이 추가되었습니다.,Student added.,,,Toast message,teacher_dashboard.html
+js.student.deleted,학생이 삭제되었습니다., student deleted.,,,Toast message suffix,teacher_dashboard.html
+js.student.enter_name,학생 이름을 입력해주세요.,Please enter student name.,,,Validation message,teacher_dashboard.html
+js.student.confirm_delete,"" 학생을 삭제하시겠습니까?,Delete student ""?,,,Confirm message,teacher_dashboard.html
+js.student.no_students,등록된 학생이 없습니다.,No students registered.,,,Empty state,teacher_dashboard.html
+js.student.load_failed,학생 목록을 불러오지 못했습니다.,Failed to load student list.,,,Error message,teacher_dashboard.html
+js.student.response_reset,학생의 설문 응답을 초기화하시겠습니까? 초기화하면 학생이 다시 설문에 참여할 수 있습니다.,Reset student's survey response? The student can participate again after reset.,,,Confirm message,teacher_dashboard.html
+js.survey.started,설문이 시작되었습니다.,Survey started.,,,Toast message,teacher_dashboard.html
+js.survey.ended,설문이 종료되었습니다.,Survey ended.,,,Toast message,teacher_dashboard.html
+js.survey.min_selection,최소 한 개 이상의 항목에 답해주세요.,Please answer at least one question.,,,Validation message,survey.html
+js.survey.submit_error,제출 중 오류가 발생했습니다.,An error occurred during submission.,,,Error message,survey.html
+js.analysis.completed,분석이 완료되었습니다!,Analysis complete!,,,Toast message,classroom_result.html
+js.analysis.error,분석 중 오류가 발생했습니다.,An error occurred during analysis.,,,Error message,classroom_result.html
+js.analysis.filtered,명의 학생으로 필터링되었습니다., students filtered.,,,Toast message suffix,classroom_result.html
+js.analysis.min_students,최소 1명 이상의 학생을 선택해주세요.,Please select at least 1 student.,,,Validation message,classroom_result.html
+js.analysis.layer_error,레이어 데이터를 불러올 수 없습니다.,Could not load layer data.,,,Error message,classroom_result.html
+js.confirm.delete_class,정말 이 학급을 삭제하시겠습니까? 모든 학생 데이터와 설문 응답이 삭제됩니다.,Are you sure you want to delete this class? All student data and survey responses will be deleted.,,,Confirm message,teacher_dashboard.html
+js.file.upload_error,파일 업로드 중 오류가 발생했습니다.,An error occurred during file upload.,,,Error message,teacher_dashboard.html
+js.file.load_error,데이터 로드 중 오류가 발생했습니다.,An error occurred while loading data.,,,Error message,upload.html
+
+# Python Flash 메시지 (flash.*)
+flash.welcome,환영합니다,Welcome,,,Flash message,auth.py
+flash.account_created,계정이 생성되었습니다.,Account created.,,,Flash message suffix,auth.py
+flash.hello,안녕하세요,Hello,,,Flash message,auth.py
+flash.invalid_code,유효하지 않은 가입 코드입니다.,Invalid registration code.,,,Flash message,auth.py
+flash.google_error,Google 계정 정보를 가져올 수 없습니다.,Could not retrieve Google account information.,,,Flash message,auth.py
+flash.login_error,로그인 중 오류가 발생했습니다.,An error occurred during login.,,,Flash message,auth.py
+flash.logged_out,로그아웃되었습니다.,You have been logged out.,,,Flash message,auth.py
+flash.enter_code,학급 코드를 입력해주세요.,Please enter the class code.,,,Flash message,student.py
+flash.invalid_class,유효하지 않은 학급 코드입니다.,Invalid class code.,,,Flash message,student.py
+flash.survey_inactive,현재 설문이 진행 중이 아닙니다. 선생님께 문의해주세요.,Survey is not active. Please contact your teacher.,,,Flash message,student.py
+flash.select_name,이름을 선택해주세요.,Please select your name.,,,Flash message,student.py
+flash.invalid_selection,유효하지 않은 선택입니다.,Invalid selection.,,,Flash message,student.py
+flash.already_responded,이미 응답을 완료한 학생입니다.,This student has already responded.,,,Flash message,student.py
+flash.select_name_first,먼저 이름을 선택해주세요.,Please select your name first.,,,Flash message,student.py
+flash.survey_done,이미 설문에 응답하셨습니다.,You have already responded to the survey.,,,Flash message,student.py
+flash.survey_complete,설문이 완료되었습니다. 감사합니다!,Survey complete. Thank you!,,,Flash message,student.py
+flash.session_ended,종료되었습니다.,Session ended.,,,Flash message,student.py

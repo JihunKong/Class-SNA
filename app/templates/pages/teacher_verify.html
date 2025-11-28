@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}{{ _('교사 인증') }}{% endblock %}
+
+{% block content %}
+<div class="min-h-[70vh] flex flex-col items-center justify-center">
+    <div class="glass-card max-w-md w-full fade-in">
+        <div class="text-center mb-8">
+            <div class="w-16 h-16 bg-gradient-to-br from-primary-400 to-secondary-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                </svg>
+            </div>
+            <h1 class="text-2xl font-bold text-white mb-2">{{ _('교사 인증') }}</h1>
+            <p class="text-white/60">{{ _('교사 전용 가입 코드를 입력해주세요') }}</p>
+        </div>
+
+        <form action="{{ url_for('auth.verify_code') }}" method="POST" class="space-y-6">
+            <div>
+                <label for="code" class="block text-sm font-medium text-white/80 mb-2">{{ _('가입 코드') }}</label>
+                <input
+                    type="text"
+                    id="code"
+                    name="code"
+                    class="glass-input w-full"
+                    placeholder="{{ _('가입 코드를 입력하세요') }}"
+                    required
+                    autocomplete="off"
+                    autofocus
+                >
+                <p class="mt-2 text-sm text-white/50">
+                    {{ _('가입 코드는 학교 관리자에게 문의하세요.') }}
+                </p>
+            </div>
+
+            <button type="submit" class="glass-btn glass-btn-primary w-full py-3">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                {{ _('인증 후 Google 로그인') }}
+            </button>
+        </form>
+
+        <div class="mt-6 pt-6 border-t border-white/10 text-center">
+            <a href="{{ url_for('views.index') }}" class="text-white/60 hover:text-white text-sm transition-colors">
+                ← {{ _('홈으로 돌아가기') }}
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

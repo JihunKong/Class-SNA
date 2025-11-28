@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+{% block title %}개인정보 수집 동의서 - Class-SNA{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto py-8 px-4">
+    <div class="glass-card p-8">
+        <h1 class="text-3xl font-bold text-white mb-4">개인정보 수집·이용 동의서</h1>
+        <p class="text-white/60 mb-8">학급 관계 네트워크 분석 활동을 위한 동의서입니다.</p>
+
+        <div class="bg-blue-500/10 border border-blue-500/30 rounded-lg p-6 mb-8">
+            <h2 class="text-xl font-semibold text-blue-300 mb-4">동의서 다운로드</h2>
+            <p class="text-white/80 mb-4">아래 버튼을 클릭하여 학교에서 사용할 수 있는 개인정보 수집·이용 동의서 양식을 다운로드하세요.</p>
+            <a href="{{ url_for('static', filename='docs/consent_form.pdf') }}"
+               download="Class-SNA_개인정보수집동의서.pdf"
+               class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                </svg>
+                동의서 PDF 다운로드
+            </a>
+        </div>
+
+        <div class="prose prose-invert max-w-none text-white/80 space-y-6">
+            <h2 class="text-xl font-semibold text-white mt-8 mb-4">동의서 미리보기</h2>
+
+            <div class="bg-white/5 rounded-lg p-6 border border-white/10">
+                <h3 class="text-lg font-bold text-white text-center mb-6">개인정보 수집·이용 동의서</h3>
+                <p class="text-center text-white/60 mb-6">(학급 관계 네트워크 분석 활동용)</p>
+
+                <section class="mb-6">
+                    <h4 class="font-semibold text-white mb-2">1. 수집 목적</h4>
+                    <p>학급 내 학생 간의 관계(친구, 학습 도움, 함께하고 싶은 친구 등)를 분석하여 학급 운영 및 교육 활동에 활용</p>
+                </section>
+
+                <section class="mb-6">
+                    <h4 class="font-semibold text-white mb-2">2. 수집 항목</h4>
+                    <ul class="list-disc pl-6">
+                        <li>학생 이름 또는 식별자 (학번, 별명 등)</li>
+                        <li>설문 응답 내용 (친구 관계, 학습 도움 관계 등)</li>
+                    </ul>
+                </section>
+
+                <section class="mb-6">
+                    <h4 class="font-semibold text-white mb-2">3. 보유 기간</h4>
+                    <p>해당 학기 종료 시까지 (분석 완료 후 교사가 직접 삭제)</p>
+                </section>
+
+                <section class="mb-6">
+                    <h4 class="font-semibold text-white mb-2">4. 열람 권한</h4>
+                    <ul class="list-disc pl-6">
+                        <li>담당 교사만 열람 가능</li>
+                        <li>개발자, 외부인 등 제3자는 열람 불가</li>
+                    </ul>
+                </section>
+
+                <section class="mb-6">
+                    <h4 class="font-semibold text-white mb-2">5. 동의 거부 권리</h4>
+                    <p>동의를 거부할 권리가 있으며, 거부 시 해당 활동에 참여하지 않을 수 있습니다.</p>
+                </section>
+
+                <section class="mb-6">
+                    <h4 class="font-semibold text-white mb-2">6. 안내 사항</h4>
+                    <ul class="list-disc pl-6">
+                        <li>수집된 정보는 교육 목적 외 사용되지 않습니다.</li>
+                        <li>실명 대신 가명, 학번, 별명 등을 사용할 수 있습니다.</li>
+                        <li>분석 결과는 학급 전체의 관계 패턴 이해에 활용됩니다.</li>
+                    </ul>
+                </section>
+
+                <div class="border-t border-white/20 pt-6 mt-6">
+                    <p class="text-center text-white/60">본인은 위의 내용을 충분히 이해하였으며, 개인정보 수집·이용에 동의합니다.</p>
+                    <div class="grid grid-cols-2 gap-8 mt-6 text-center">
+                        <div>
+                            <p class="text-white/60">날짜: _______________</p>
+                        </div>
+                        <div>
+                            <p class="text-white/60">학생 서명: _______________</p>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-8 mt-4 text-center">
+                        <div>
+                            <p class="text-white/60">학부모 성명: _______________</p>
+                        </div>
+                        <div>
+                            <p class="text-white/60">학부모 서명: _______________</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <section class="mt-8">
+                <h2 class="text-xl font-semibold text-white mb-4">사용 안내</h2>
+                <ol class="list-decimal pl-6 space-y-2">
+                    <li>위 PDF 파일을 다운로드하여 인쇄합니다.</li>
+                    <li>학생 및 학부모에게 배포하여 서명을 받습니다.</li>
+                    <li>서명된 동의서는 학교에서 보관합니다.</li>
+                    <li>동의를 받은 학생만 설문에 참여할 수 있도록 합니다.</li>
+                </ol>
+            </section>
+
+            <section class="mt-8 bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-4">
+                <h3 class="text-lg font-semibold text-yellow-300 mb-2">개인정보 보호 팁</h3>
+                <p>실명 대신 <strong>학번</strong>, <strong>별명</strong>, 또는 <strong>가명</strong>을 사용하시면 개인정보 보호가 더욱 강화됩니다. Class-SNA는 분석 결과만 중요하므로, 실제 이름이 아니어도 동일한 분석이 가능합니다.</p>
+            </section>
+        </div>
+
+        <div class="mt-8 pt-6 border-t border-white/10 flex justify-between">
+            <a href="/" class="text-blue-400 hover:text-blue-300">&larr; 홈으로 돌아가기</a>
+            <a href="/legal/privacy" class="text-blue-400 hover:text-blue-300">개인정보 처리방침 보기 &rarr;</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

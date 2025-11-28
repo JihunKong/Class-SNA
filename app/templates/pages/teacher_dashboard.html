@@ -1,22 +1,45 @@
 {% extends "base.html" %}
+{% from "components/onboarding.html" import render_onboarding %}
 
-{% block title %}교사 대시보드{% endblock %}
+{% block title %}{{ _('교사 대시보드') }}{% endblock %}
 
 {% block content %}
+{# 온보딩 단계 계산 #}
+{% set first_classroom = classrooms[0] if classrooms else None %}
+{% set has_students = first_classroom and first_classroom.students.count() > 0 %}
+{% set has_responses = first_classroom and first_classroom.surveys.filter_by(is_complete=True).count() > 0 %}
+
+{% if not classrooms %}
+    {% set onboarding_step = 1 %}
+{% elif not has_students %}
+    {% set onboarding_step = 2 %}
+{% elif not has_responses %}
+    {% set onboarding_step = 3 %}
+{% else %}
+    {% set onboarding_step = 4 %}
+{% endif %}
+
 <div class="space-y-6">
     <!-- 헤더 -->
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-            <h1 class="text-3xl font-bold text-white">내 학급 관리</h1>
-            <p class="text-white/60 mt-1">안녕하세요, {{ current_user.name }}님</p>
+            <h1 class="text-3xl font-bold text-white">{{ _('내 학급 관리') }}</h1>
+            <p class="text-white/60 mt-1">{{ _('안녕하세요,') }} {{ current_user.name }}{{ _('님') }}</p>
         </div>
         <button onclick="openCreateModal()" class="glass-btn-primary">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
             </svg>
-            새 학급 만들기
+            {{ _('새 학급 만들기') }}
         </button>
     </div>
+
+    <!-- 온보딩 가이드 (아직 분석 전 단계인 경우) -->
+    {% if onboarding_step < 5 and not session.get('analyzed') %}
+    <div class="mb-6">
+        {{ render_onboarding(onboarding_step, first_classroom) }}
+    </div>
+    {% endif %}
 
     <!-- 학급 목록 -->
     <div id="classrooms-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -36,40 +59,45 @@
                         </div>
                     </div>
                     <span class="badge {{ 'badge-success' if classroom.survey_active else 'badge-secondary' }}">
-                        {{ '설문 진행중' if classroom.survey_active else '설문 대기' }}
+                        {{ _('설문 진행중') if classroom.survey_active else _('설문 대기') }}
                     </span>
                 </div>
 
                 <div class="grid grid-cols-2 gap-4 mb-4">
                     <div class="text-center p-3 rounded-lg bg-white/5">
                         <div class="text-2xl font-bold text-white">{{ classroom.students.count() }}</div>
-                        <div class="text-white/50 text-sm">학생 수</div>
+                        <div class="text-white/50 text-sm">{{ _('학생 수') }}</div>
                     </div>
                     <div class="text-center p-3 rounded-lg bg-white/5">
                         <div class="text-2xl font-bold text-white">{{ classroom.surveys.filter_by(is_complete=True).count() }}</div>
-                        <div class="text-white/50 text-sm">응답 완료</div>
+                        <div class="text-white/50 text-sm">{{ _('응답 완료') }}</div>
                     </div>
                 </div>
 
                 <div class="flex gap-2">
                     <button onclick="openClassroom({{ classroom.id }})" class="glass-btn flex-1 text-sm">
-                        관리
+                        {{ _('관리') }}
                     </button>
                     <button onclick="toggleSurvey({{ classroom.id }}, {{ 'true' if not classroom.survey_active else 'false' }})" class="glass-btn flex-1 text-sm">
-                        {{ '설문 시작' if not classroom.survey_active else '설문 종료' }}
+                        {{ _('설문 시작') if not classroom.survey_active else _('설문 종료') }}
                     </button>
                 </div>
+                {% if classroom.surveys.filter_by(is_complete=True).count() > 0 %}
+                <div class="mt-2">
+                    <button onclick="runAnalysis({{ classroom.id }})" class="glass-btn-primary w-full text-sm">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                        </svg>
+                        {{ _('분석하기') }}
+                    </button>
+                </div>
+                {% endif %}
             </div>
             {% endfor %}
         {% else %}
-            <div class="col-span-full text-center py-12">
-                <svg class="w-16 h-16 text-white/30 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
-                </svg>
-                <p class="text-white/60 mb-4">아직 생성된 학급이 없습니다.</p>
-                <button onclick="openCreateModal()" class="glass-btn-primary">
-                    첫 번째 학급 만들기
-                </button>
+            <!-- 학급이 없으면 빈 상태 (온보딩 가이드가 위에 이미 표시됨) -->
+            <div class="col-span-full text-center py-8 text-white/40">
+                <p>{{ _('위의 가이드를 따라 학급을 생성해주세요.') }}</p>
             </div>
         {% endif %}
     </div>
@@ -78,19 +106,19 @@
 <!-- 학급 생성 모달 -->
 <div id="create-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden items-center justify-center z-50">
     <div class="glass-card max-w-md w-full mx-4">
-        <h2 class="text-xl font-bold text-white mb-4">새 학급 만들기</h2>
+        <h2 class="text-xl font-bold text-white mb-4">{{ _('새 학급 만들기') }}</h2>
         <form id="create-form" class="space-y-4">
             <div>
-                <label class="block text-sm font-medium text-white/80 mb-2">학급 이름</label>
-                <input type="text" name="name" class="glass-input w-full" placeholder="예: 3학년 2반" required>
+                <label class="block text-sm font-medium text-white/80 mb-2">{{ _('학급 이름') }}</label>
+                <input type="text" name="name" class="glass-input w-full" placeholder="{{ _('예: 3학년 2반') }}" required>
             </div>
             <div>
-                <label class="block text-sm font-medium text-white/80 mb-2">설명 (선택)</label>
-                <textarea name="description" class="glass-input w-full" rows="2" placeholder="학급에 대한 설명"></textarea>
+                <label class="block text-sm font-medium text-white/80 mb-2">{{ _('설명 (선택)') }}</label>
+                <textarea name="description" class="glass-input w-full" rows="2" placeholder="{{ _('학급에 대한 설명') }}"></textarea>
             </div>
             <div class="flex gap-3 pt-4">
-                <button type="button" onclick="closeCreateModal()" class="glass-btn flex-1">취소</button>
-                <button type="submit" class="glass-btn-primary flex-1">생성</button>
+                <button type="button" onclick="closeCreateModal()" class="glass-btn flex-1">{{ _('취소') }}</button>
+                <button type="submit" class="glass-btn-primary flex-1">{{ _('생성') }}</button>
             </div>
         </form>
     </div>
@@ -100,7 +128,7 @@
 <div id="manage-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden items-center justify-center z-50">
     <div class="glass-card max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
         <div class="flex justify-between items-center mb-4">
-            <h2 class="text-xl font-bold text-white" id="manage-classroom-name">학급 관리</h2>
+            <h2 class="text-xl font-bold text-white" id="manage-classroom-name">{{ _('학급 관리') }}</h2>
             <button onclick="closeManageModal()" class="text-white/50 hover:text-white">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
@@ -111,32 +139,42 @@
         <div class="space-y-6">
             <!-- 학급 코드 공유 -->
             <div class="p-4 rounded-xl bg-white/5">
-                <p class="text-white/60 text-sm mb-2">학생들에게 이 코드를 공유하세요</p>
+                <p class="text-white/60 text-sm mb-2">{{ _('학생들에게 이 코드를 공유하세요') }}</p>
                 <div class="flex items-center gap-3">
                     <span class="text-3xl font-mono font-bold text-primary-300 tracking-widest" id="manage-classroom-code"></span>
                     <button onclick="copyCode(document.getElementById('manage-classroom-code').textContent)" class="glass-btn text-sm">
-                        복사
+                        {{ _('복사') }}
                     </button>
                 </div>
-                <p class="text-white/40 text-xs mt-2">참여 URL: <span id="join-url"></span></p>
+                <p class="text-white/40 text-xs mt-2">{{ _('참여 URL:') }} <span id="join-url"></span></p>
             </div>
 
             <!-- 학생 명단 업로드 -->
             <div>
-                <h3 class="text-lg font-medium text-white mb-3">학생 명단</h3>
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="text-lg font-medium text-white">{{ _('학생 명단') }}</h3>
+                    <a href="{{ url_for('static', filename='docs/student_list_template.csv') }}"
+                       download="학생명단_양식.csv"
+                       class="text-sm text-primary-300 hover:text-primary-200 flex items-center gap-1">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                        </svg>
+                        {{ _('양식 다운로드') }}
+                    </a>
+                </div>
                 <div class="flex gap-3 mb-4">
                     <input type="file" id="student-file" accept=".csv,.xlsx,.xls" class="hidden">
                     <button onclick="document.getElementById('student-file').click()" class="glass-btn flex-1">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
                         </svg>
-                        파일 업로드
+                        {{ _('파일 업로드') }}
                     </button>
-                    <button onclick="openAddStudentForm()" class="glass-btn flex-1">
+                    <button onclick="openAddStudentsModal()" class="glass-btn flex-1">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
                         </svg>
-                        직접 추가
+                        {{ _('학생 추가') }}
                     </button>
                 </div>
 
@@ -149,17 +187,49 @@
             <!-- 학급 삭제 -->
             <div class="pt-4 border-t border-white/10">
                 <button onclick="deleteClassroom()" class="text-red-400 hover:text-red-300 text-sm">
-                    학급 삭제
+                    {{ _('학급 삭제') }}
                 </button>
             </div>
         </div>
     </div>
 </div>
 
+<!-- 학생 일괄 추가 모달 -->
+<div id="add-students-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden items-center justify-center z-50">
+    <div class="glass-card max-w-md w-full mx-4">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-xl font-bold text-white">{{ _('학생 추가') }}</h2>
+            <button onclick="closeAddStudentsModal()" class="text-white/50 hover:text-white">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+        <form id="add-students-form" class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium text-white/80 mb-2">{{ _('학생 이름') }}</label>
+                <textarea
+                    id="student-names-input"
+                    class="glass-input w-full h-40 resize-none"
+                    placeholder="{{ _('학생 이름을 입력하세요') }}&#10;{{ _('(엔터로 줄바꿈하여 여러 명 입력 가능)') }}&#10;&#10;{{ _('예시:') }}&#10;김철수&#10;이영희&#10;박지성"
+                ></textarea>
+                <p class="mt-2 text-sm text-white/50">{{ _('한 줄에 한 명씩 입력하세요') }}</p>
+            </div>
+            <div class="flex gap-3 pt-4">
+                <button type="button" onclick="closeAddStudentsModal()" class="glass-btn flex-1">{{ _('취소') }}</button>
+                <button type="submit" class="glass-btn glass-btn-primary flex-1">{{ _('추가') }}</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- 토스트 알림 컨테이너 -->
+<div id="toast-container" class="fixed top-24 right-4 z-50 space-y-2"></div>
+
 <script>
 let currentClassroomId = null;
 
-// 학급 생성 모달
+// ===== 학급 생성 모달 =====
 function openCreateModal() {
     document.getElementById('create-modal').classList.remove('hidden');
     document.getElementById('create-modal').classList.add('flex');
@@ -176,6 +246,7 @@ document.getElementById('create-form').addEventListener('submit', async function
     const formData = new FormData(this);
 
     try {
+        showLoading();
         const response = await fetch('/api/v1/classroom', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
@@ -187,23 +258,26 @@ document.getElementById('create-form').addEventListener('submit', async function
 
         const data = await response.json();
         if (data.success) {
-            location.reload();
+            showToast(t('js.classroom.created'), 'success');
+            setTimeout(() => location.reload(), 1000);
         } else {
-            alert(data.error);
+            showToast(data.error, 'error');
         }
     } catch (error) {
-        alert('학급 생성 중 오류가 발생했습니다.');
+        showToast(t('js.error.generic'), 'error');
+    } finally {
+        hideLoading();
     }
 });
 
 // 학급 코드 복사
 function copyCode(code) {
     navigator.clipboard.writeText(code).then(() => {
-        alert('학급 코드가 복사되었습니다: ' + code);
+        showToast(t('js.classroom.code_copied'), 'success');
     });
 }
 
-// 학급 관리 모달
+// ===== 학급 관리 모달 =====
 async function openClassroom(classroomId) {
     currentClassroomId = classroomId;
     document.getElementById('manage-modal').classList.remove('hidden');
@@ -228,7 +302,37 @@ function closeManageModal() {
     currentClassroomId = null;
 }
 
-// 학생 목록 로드
+// ===== 학생 추가 모달 =====
+function openAddStudentsModal() {
+    document.getElementById('add-students-modal').classList.remove('hidden');
+    document.getElementById('add-students-modal').classList.add('flex');
+    document.getElementById('student-names-input').value = '';
+    document.getElementById('student-names-input').focus();
+}
+
+function closeAddStudentsModal() {
+    document.getElementById('add-students-modal').classList.add('hidden');
+    document.getElementById('add-students-modal').classList.remove('flex');
+}
+
+// 학생 추가 폼 제출
+document.getElementById('add-students-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const input = document.getElementById('student-names-input').value;
+    const names = input.split('\n')
+        .map(name => name.trim())
+        .filter(name => name.length > 0);
+
+    if (names.length === 0) {
+        showToast(t('js.error.validation'), 'warning');
+        return;
+    }
+
+    await addStudents(names);
+    closeAddStudentsModal();
+});
+
+// ===== 학생 목록 관리 =====
 async function loadStudents(classroomId) {
     try {
         const response = await fetch(`/api/v1/classroom/${classroomId}/students`);
@@ -236,25 +340,39 @@ async function loadStudents(classroomId) {
 
         const container = document.getElementById('student-list');
         if (data.students.length === 0) {
-            container.innerHTML = '<p class="text-white/50 text-center py-4">등록된 학생이 없습니다.</p>';
+            container.innerHTML = `<p class="text-white/50 text-center py-4">{{ _('등록된 학생이 없습니다.') }}</p>`;
         } else {
             container.innerHTML = data.students.map(s => `
-                <div class="flex items-center justify-between p-3 rounded-lg bg-white/5">
+                <div class="flex items-center justify-between p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
                     <div class="flex items-center gap-3">
-                        ${s.student_number ? `<span class="text-white/50 text-sm">${s.student_number}번</span>` : ''}
-                        <span class="text-white">${s.name}</span>
-                        ${s.has_responded ? '<span class="badge badge-success text-xs">응답완료</span>' : ''}
+                        ${s.student_number ? `<span class="text-white/50 text-sm w-8">${s.student_number}{{ _('번') }}</span>` : ''}
+                        <span class="text-white font-medium">${s.name}</span>
+                        ${s.has_responded ? '<span class="badge badge-success text-xs ml-2">{{ _("응답완료") }}</span>' : ''}
                     </div>
-                    <button onclick="deleteStudent(${s.id})" class="text-white/30 hover:text-red-400">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                        </svg>
-                    </button>
+                    <div class="flex gap-2">
+                        ${s.has_responded ? `
+                        <button onclick="resetResponse(${s.id}, '${s.name.replace(/'/g, "\\'")}')"
+                                class="glass-btn text-xs px-3 py-1 text-yellow-300 hover:text-yellow-200 hover:bg-yellow-500/20">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                            </svg>
+                            {{ _('초기화') }}
+                        </button>
+                        ` : ''}
+                        <button onclick="deleteStudent(${s.id}, '${s.name.replace(/'/g, "\\'")}')"
+                                class="glass-btn text-xs px-3 py-1 text-red-300 hover:text-red-200 hover:bg-red-500/20">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                            </svg>
+                            {{ _('삭제') }}
+                        </button>
+                    </div>
                 </div>
             `).join('');
         }
     } catch (error) {
-        console.error('학생 목록 로드 오류:', error);
+        console.error('Error loading students:', error);
+        showToast(t('js.error.generic'), 'error');
     }
 }
 
@@ -275,111 +393,174 @@ document.getElementById('student-file').addEventListener('change', async functio
 
         const data = await response.json();
         if (data.success) {
-            alert(data.message);
+            showToast(data.message, 'success');
             loadStudents(currentClassroomId);
         } else {
-            alert(data.error);
+            showToast(data.error, 'error');
         }
     } catch (error) {
-        alert('파일 업로드 중 오류가 발생했습니다.');
+        showToast(t('js.error.generic'), 'error');
     } finally {
         hideLoading();
         e.target.value = '';
     }
 });
 
-// 학생 직접 추가
-function openAddStudentForm() {
-    const name = prompt('학생 이름을 입력하세요:');
-    if (!name) return;
-
-    addStudent(name);
-}
-
-async function addStudent(name) {
+// 여러 학생 추가
+async function addStudents(names) {
     try {
+        showLoading();
         const response = await fetch(`/api/v1/classroom/${currentClassroomId}/students`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({students: [{name: name}]})
+            body: JSON.stringify({students: names.map(name => ({name}))})
         });
 
         const data = await response.json();
         if (data.success) {
+            showToast(t('js.student.added'), 'success');
             loadStudents(currentClassroomId);
         } else {
-            alert(data.error);
+            showToast(data.error, 'error');
         }
     } catch (error) {
-        alert('학생 추가 중 오류가 발생했습니다.');
+        showToast(t('js.error.generic'), 'error');
+    } finally {
+        hideLoading();
     }
 }
 
 // 학생 삭제
-async function deleteStudent(studentId) {
-    if (!confirm('이 학생을 삭제하시겠습니까?')) return;
+async function deleteStudent(studentId, studentName) {
+    if (!confirm(t('js.student.confirm_delete', {name: studentName}))) return;
 
     try {
+        showLoading();
         const response = await fetch(`/api/v1/classroom/${currentClassroomId}/students/${studentId}`, {
             method: 'DELETE'
         });
 
         const data = await response.json();
         if (data.success) {
+            showToast(t('js.student.deleted'), 'success');
             loadStudents(currentClassroomId);
         } else {
-            alert(data.error);
+            showToast(data.error, 'error');
         }
     } catch (error) {
-        alert('학생 삭제 중 오류가 발생했습니다.');
+        showToast(t('js.error.generic'), 'error');
+    } finally {
+        hideLoading();
     }
 }
 
-// 설문 토글
+// 학생 응답 초기화
+async function resetResponse(studentId, studentName) {
+    if (!confirm(`{{ _('"') }}${studentName}{{ _('" 학생의 설문 응답을 초기화하시겠습니까?') }}`)) return;
+
+    try {
+        showLoading();
+        const response = await fetch(`/api/v1/classroom/${currentClassroomId}/students/${studentId}/reset-response`, {
+            method: 'POST'
+        });
+
+        const data = await response.json();
+        if (data.success) {
+            showToast(data.message, 'success');
+            loadStudents(currentClassroomId);
+        } else {
+            showToast(data.error, 'error');
+        }
+    } catch (error) {
+        showToast(t('js.error.generic'), 'error');
+    } finally {
+        hideLoading();
+    }
+}
+
+// ===== 설문 관리 =====
 async function toggleSurvey(classroomId, activate) {
     try {
+        showLoading();
         const response = await fetch(`/api/v1/classroom/${classroomId}/survey/toggle`, {
             method: 'POST'
         });
 
         const data = await response.json();
         if (data.success) {
-            location.reload();
+            showToast(activate ? t('js.survey.started') : t('js.survey.ended'), 'success');
+            setTimeout(() => location.reload(), 1000);
         } else {
-            alert(data.error);
+            showToast(data.error, 'error');
         }
     } catch (error) {
-        alert('설문 상태 변경 중 오류가 발생했습니다.');
+        showToast(t('js.error.generic'), 'error');
+    } finally {
+        hideLoading();
     }
 }
 
 // 학급 삭제
 async function deleteClassroom() {
-    if (!confirm('정말 이 학급을 삭제하시겠습니까? 모든 학생 데이터와 설문 응답이 삭제됩니다.')) return;
+    if (!confirm(t('js.classroom.confirm_delete'))) return;
 
     try {
+        showLoading();
         const response = await fetch(`/api/v1/classroom/${currentClassroomId}`, {
             method: 'DELETE'
         });
 
         const data = await response.json();
         if (data.success) {
-            location.reload();
+            showToast(t('js.classroom.deleted'), 'success');
+            setTimeout(() => location.reload(), 1000);
         } else {
-            alert(data.error);
+            showToast(data.error, 'error');
         }
     } catch (error) {
-        alert('학급 삭제 중 오류가 발생했습니다.');
+        showToast(t('js.error.generic'), 'error');
+    } finally {
+        hideLoading();
     }
 }
 
-// 모달 외부 클릭 시 닫기
+// ===== 모달 외부 클릭 시 닫기 =====
 document.getElementById('create-modal').addEventListener('click', function(e) {
     if (e.target === this) closeCreateModal();
 });
 document.getElementById('manage-modal').addEventListener('click', function(e) {
     if (e.target === this) closeManageModal();
 });
+document.getElementById('add-students-modal').addEventListener('click', function(e) {
+    if (e.target === this) closeAddStudentsModal();
+});
+
+// ===== 분석 실행 =====
+async function runAnalysis(classroomId) {
+    showLoading();
+    try {
+        const response = await fetch(`/api/v1/classroom/${classroomId}/analyze`, {
+            method: 'POST'
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            showToast(t('js.analysis.completed'), 'success');
+            // 분석 결과 페이지로 이동
+            setTimeout(() => {
+                window.location.href = `/analysis/classroom/${classroomId}`;
+            }, 1000);
+        } else {
+            showToast(data.error || t('js.analysis.error'), 'error');
+        }
+    } catch (error) {
+        console.error('Analysis error:', error);
+        showToast(t('js.analysis.error'), 'error');
+    } finally {
+        hideLoading();
+    }
+}
 </script>
 
 <style>

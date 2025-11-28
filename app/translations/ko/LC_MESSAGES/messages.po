@@ -1,0 +1,1370 @@
+# Korean translations for PROJECT.
+# Copyright (C) 2025 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2025-11-28 12:50+0900\n"
+"PO-Revision-Date: 2025-11-28 12:52+0900\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: ko\n"
+"Language-Team: ko <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: app/templates/base.html:6
+msgid "Class-SNA - 학급 관계 네트워크 분석 시스템"
+msgstr ""
+
+#: app/templates/base.html:7
+msgid "학급 관계 분석"
+msgstr ""
+
+#: app/templates/base.html:98 app/templates/base.html:169
+#: app/templates/pages/index.html:3
+msgid "홈"
+msgstr ""
+
+#: app/templates/base.html:102 app/templates/base.html:173
+msgid "설문 진행"
+msgstr ""
+
+#: app/templates/base.html:103 app/templates/base.html:174
+msgid "나가기"
+msgstr ""
+
+#: app/templates/base.html:107 app/templates/base.html:178
+#: app/templates/pages/analysis/classroom_result.html:11
+msgid "내 학급"
+msgstr ""
+
+#: app/templates/base.html:109 app/templates/base.html:180
+#: app/templates/pages/analysis/classroom_result.html:3
+#: app/templates/pages/analysis/classroom_result.html:15
+msgid "분석 결과"
+msgstr ""
+
+#: app/templates/base.html:119 app/templates/base.html:183
+#: app/templates/pages/teacher_dashboard.html:79
+msgid "관리"
+msgstr ""
+
+#: app/templates/base.html:123 app/templates/base.html:185
+msgid "로그아웃"
+msgstr ""
+
+#: app/templates/base.html:127 app/templates/base.html:189
+#: app/templates/pages/join.html:3 app/templates/pages/join.html:14
+msgid "학급 참여"
+msgstr ""
+
+#: app/templates/base.html:132 app/templates/base.html:190
+#: app/templates/pages/index.html:35
+msgid "교사 로그인"
+msgstr ""
+
+#: app/templates/base.html:227 app/templates/pages/index.html:13
+msgid "학급 관계 네트워크 분석 시스템"
+msgstr ""
+
+#: app/templates/base.html:228
+msgid "공지훈"
+msgstr ""
+
+#: app/templates/base.html:230
+msgid "개인정보 처리방침"
+msgstr ""
+
+#: app/templates/base.html:232
+msgid "이용약관"
+msgstr ""
+
+#: app/templates/base.html:234
+msgid "동의서 다운로드"
+msgstr ""
+
+#: app/templates/base.html:244
+msgid "쿠키 사용 안내"
+msgstr ""
+
+#: app/templates/base.html:246
+msgid "이 웹사이트는 더 나은 서비스 제공을 위해 쿠키를 사용합니다. 계속 이용하시면 쿠키 사용에 동의하는 것으로 간주됩니다."
+msgstr ""
+
+#: app/templates/base.html:247
+msgid "자세히 알아보기"
+msgstr ""
+
+#: app/templates/base.html:252
+msgid "동의"
+msgstr ""
+
+#: app/templates/base.html:255
+msgid "거절"
+msgstr ""
+
+#: app/templates/base.html:266 app/templates/base.html:276
+msgid "분석 중..."
+msgstr ""
+
+#: app/templates/base.html:275
+msgid "로딩 중..."
+msgstr ""
+
+#: app/templates/base.html:277
+msgid "저장 중..."
+msgstr ""
+
+#: app/templates/base.html:280
+msgid "성공적으로 저장되었습니다."
+msgstr ""
+
+#: app/templates/base.html:281
+msgid "성공적으로 삭제되었습니다."
+msgstr ""
+
+#: app/templates/base.html:282
+msgid "클립보드에 복사되었습니다."
+msgstr ""
+
+#: app/templates/base.html:283 app/templates/base.html:314
+msgid "파일이 업로드되었습니다."
+msgstr ""
+
+#: app/templates/base.html:286
+msgid "오류가 발생했습니다."
+msgstr ""
+
+#: app/templates/base.html:287
+msgid "네트워크 오류가 발생했습니다."
+msgstr ""
+
+#: app/templates/base.html:288
+msgid "서버 오류가 발생했습니다."
+msgstr ""
+
+#: app/templates/base.html:289
+msgid "입력값을 확인해주세요."
+msgstr ""
+
+#: app/templates/base.html:292
+msgid "학급이 생성되었습니다."
+msgstr ""
+
+#: app/templates/base.html:293
+msgid "학급이 삭제되었습니다."
+msgstr ""
+
+#: app/templates/base.html:294
+msgid "학급 정보가 수정되었습니다."
+msgstr ""
+
+#: app/templates/base.html:295
+msgid "학급 코드가 복사되었습니다."
+msgstr ""
+
+#: app/templates/base.html:296
+msgid "정말 이 학급을 삭제하시겠습니까?"
+msgstr ""
+
+#: app/templates/base.html:299
+msgid "설문이 시작되었습니다."
+msgstr ""
+
+#: app/templates/base.html:300
+msgid "설문이 종료되었습니다."
+msgstr ""
+
+#: app/templates/base.html:301
+msgid "설문이 제출되었습니다."
+msgstr ""
+
+#: app/templates/base.html:302
+msgid "최소 1명 이상 선택해주세요."
+msgstr ""
+
+#: app/templates/base.html:303
+msgid "설문을 제출하시겠습니까?"
+msgstr ""
+
+#: app/templates/base.html:306
+msgid "학생이 추가되었습니다."
+msgstr ""
+
+#: app/templates/base.html:307
+msgid "학생이 삭제되었습니다."
+msgstr ""
+
+#: app/templates/base.html:308
+msgid "학생 정보가 수정되었습니다."
+msgstr ""
+
+#: app/templates/base.html:309
+msgid "정말 이 학생을 삭제하시겠습니까?"
+msgstr ""
+
+#: app/templates/base.html:312
+msgid "지원하지 않는 파일 형식입니다."
+msgstr ""
+
+#: app/templates/base.html:313
+msgid "파일 크기가 너무 큽니다."
+msgstr ""
+
+#: app/templates/base.html:317
+msgid "분석이 완료되었습니다."
+msgstr ""
+
+#: app/templates/base.html:318
+msgid "분석 진행 중..."
+msgstr ""
+
+#: app/templates/base.html:319
+#: app/templates/pages/analysis/classroom_result.html:323
+msgid "분석 중 오류가 발생했습니다."
+msgstr ""
+
+#: app/templates/base.html:322
+msgid "확인"
+msgstr ""
+
+#: app/templates/base.html:323 app/templates/pages/teacher_dashboard.html:120
+#: app/templates/pages/teacher_dashboard.html:219
+msgid "취소"
+msgstr ""
+
+#: app/templates/base.html:324 app/templates/pages/teacher_dashboard.html:367
+msgid "삭제"
+msgstr ""
+
+#: app/templates/components/onboarding.html:13
+msgid "학급 관계 분석 시작하기"
+msgstr ""
+
+#: app/templates/components/onboarding.html:14
+msgid "아래 단계를 따라 학급 관계 분석을 진행해주세요"
+msgstr ""
+
+#: app/templates/components/onboarding.html:31
+#: app/templates/pages/index.html:89
+msgid "학급 생성"
+msgstr ""
+
+#: app/templates/components/onboarding.html:34
+msgid "학급 생성 완료"
+msgstr ""
+
+#: app/templates/components/onboarding.html:36
+msgid "새 학급을 만들어 시작하세요"
+msgstr ""
+
+#: app/templates/components/onboarding.html:42
+msgid "학급 만들기"
+msgstr ""
+
+#: app/templates/components/onboarding.html:59
+msgid "학생 명단 등록"
+msgstr ""
+
+#: app/templates/components/onboarding.html:62
+msgid "명 등록 완료"
+msgstr ""
+
+#: app/templates/components/onboarding.html:64
+msgid "학생 명단을 업로드하거나 직접 추가하세요"
+msgstr ""
+
+#: app/templates/components/onboarding.html:66
+msgid "학급 생성 후 진행 가능"
+msgstr ""
+
+#: app/templates/components/onboarding.html:72
+#: app/templates/pages/teacher_dashboard.html:177
+#: app/templates/pages/teacher_dashboard.html:201
+msgid "학생 추가"
+msgstr ""
+
+#: app/templates/components/onboarding.html:89
+msgid "설문 응답 수집"
+msgstr ""
+
+#: app/templates/components/onboarding.html:92
+msgid "명 응답 완료"
+msgstr ""
+
+#: app/templates/components/onboarding.html:94 app/templates/pages/join.html:20
+msgid "학급 코드"
+msgstr ""
+
+#: app/templates/components/onboarding.html:94
+msgid "를 학생들에게 공유하세요"
+msgstr ""
+
+#: app/templates/components/onboarding.html:96
+msgid "학생 등록 후 진행 가능"
+msgstr ""
+
+#: app/templates/components/onboarding.html:103
+msgid "코드 복사"
+msgstr ""
+
+#: app/templates/components/onboarding.html:107
+#: app/templates/pages/teacher_dashboard.html:82
+msgid "설문 시작"
+msgstr ""
+
+#: app/templates/components/onboarding.html:110
+msgid "진행중"
+msgstr ""
+
+#: app/templates/components/onboarding.html:128
+msgid "관계 분석 실행"
+msgstr ""
+
+#: app/templates/components/onboarding.html:131
+msgid "분석 완료"
+msgstr ""
+
+#: app/templates/components/onboarding.html:133
+msgid "응답 데이터를 분석하여 관계 네트워크를 생성합니다"
+msgstr ""
+
+#: app/templates/components/onboarding.html:135
+msgid "설문 응답 수집 후 진행 가능"
+msgstr ""
+
+#: app/templates/components/onboarding.html:144
+#: app/templates/pages/index.html:103
+msgid "분석 시작"
+msgstr ""
+
+#: app/templates/components/onboarding.html:157
+msgid "학생들은 학급 코드를 입력하여 설문에 참여할 수 있습니다."
+msgstr ""
+
+#: app/templates/components/onboarding.html:158
+msgid "충분한 응답이 수집되면 네트워크 분석을 실행해주세요."
+msgstr ""
+
+#: app/templates/pages/index.html:16
+msgid "설문조사 데이터를 기반으로 학생들 간의 사회적 관계를 시각화하고 분석합니다."
+msgstr ""
+
+#: app/templates/pages/index.html:17
+msgid "인기도, 영향력, 그룹 구조를 파악하여 건강한 학급 운영을 지원합니다."
+msgstr ""
+
+#: app/templates/pages/index.html:27
+#: app/templates/pages/teacher_dashboard.html:26
+msgid "내 학급 관리"
+msgstr ""
+
+#: app/templates/pages/index.html:41
+msgid "학급 참여 (학생)"
+msgstr ""
+
+#: app/templates/pages/index.html:55
+msgid "네트워크 시각화"
+msgstr ""
+
+#: app/templates/pages/index.html:56
+msgid "학생들 간의 관계를 인터랙티브 네트워크 그래프로 시각화합니다."
+msgstr ""
+
+#: app/templates/pages/index.html:65
+msgid "중심성 분석"
+msgstr ""
+
+#: app/templates/pages/index.html:66
+msgid "인기도, 활동성, 영향력 등 다양한 중심성 지표를 계산합니다."
+msgstr ""
+
+#: app/templates/pages/index.html:75
+msgid "그룹 탐지"
+msgstr ""
+
+#: app/templates/pages/index.html:76
+msgid "커뮤니티 탐지 알고리즘으로 자연스러운 그룹을 발견합니다."
+msgstr ""
+
+#: app/templates/pages/index.html:82
+msgid "사용 방법"
+msgstr ""
+
+#: app/templates/pages/index.html:90
+msgid "교사가 학급을 만들고 학생 명단을 등록합니다."
+msgstr ""
+
+#: app/templates/pages/index.html:96
+msgid "학생 참여"
+msgstr ""
+
+#: app/templates/pages/index.html:97
+msgid "학생들이 참여코드로 입장해 설문에 응답합니다."
+msgstr ""
+
+#: app/templates/pages/index.html:104
+msgid "응답 수집 완료 후 분석 버튼을 눌러 관계를 분석합니다."
+msgstr ""
+
+#: app/templates/pages/index.html:110
+msgid "결과 확인"
+msgstr ""
+
+#: app/templates/pages/index.html:111
+msgid "네트워크 시각화와 AI 해석 결과를 확인합니다."
+msgstr ""
+
+#: app/templates/pages/join.html:15
+msgid "선생님이 알려주신 학급 코드를 입력하세요"
+msgstr ""
+
+#: app/templates/pages/join.html:26
+msgid "예: ABC123"
+msgstr ""
+
+#: app/templates/pages/join.html:32
+msgid "6자리 영문/숫자 코드"
+msgstr ""
+
+#: app/templates/pages/join.html:39
+msgid "참여하기"
+msgstr ""
+
+#: app/templates/pages/join.html:44
+msgid "학급 코드가 없으신가요?"
+msgstr ""
+
+#: app/templates/pages/join.html:45
+msgid "선생님께 문의해주세요."
+msgstr ""
+
+#: app/templates/pages/select_name.html:3
+msgid "이름 선택"
+msgstr ""
+
+#: app/templates/pages/select_name.html:10
+msgid "학급 코드:"
+msgstr ""
+
+#: app/templates/pages/select_name.html:14
+msgid "본인의 이름을 선택해주세요"
+msgstr ""
+
+#: app/templates/pages/select_name.html:25
+#: app/templates/pages/teacher_dashboard.html:348
+msgid "번"
+msgstr ""
+
+#: app/templates/pages/select_name.html:37
+msgid "선택 완료"
+msgstr ""
+
+#: app/templates/pages/select_name.html:45
+msgid "선택 가능한 학생이 없습니다."
+msgstr ""
+
+#: app/templates/pages/select_name.html:46
+msgid "모든 학생이 이미 응답을 완료했거나,"
+msgstr ""
+
+#: app/templates/pages/select_name.html:46
+msgid "아직 학생 명단이 등록되지 않았습니다."
+msgstr ""
+
+#: app/templates/pages/select_name.html:55
+msgid "다른 학급 코드 입력"
+msgstr ""
+
+#: app/templates/pages/survey.html:3 app/templates/pages/survey.html:9
+msgid "설문조사"
+msgstr ""
+
+#: app/templates/pages/survey.html:10
+msgid "님, 아래 질문에 답해주세요"
+msgstr ""
+
+#: app/templates/pages/survey.html:18
+msgid "친하게 지내고 싶은 친구를 선택해주세요 (최대 5명)"
+msgstr ""
+
+#: app/templates/pages/survey.html:30 app/templates/pages/survey.html:49
+#: app/templates/pages/survey.html:68 app/templates/pages/survey.html:87
+#: app/templates/pages/survey.html:106 app/templates/pages/survey.html:125
+#: app/templates/pages/survey.html:145
+msgid "선택된 친구:"
+msgstr ""
+
+#: app/templates/pages/survey.html:37
+msgid "공부나 과제할 때 도움을 주는 친구를 선택해주세요 (최대 3명)"
+msgstr ""
+
+#: app/templates/pages/survey.html:56
+msgid "모둠 활동을 함께 하고 싶은 친구를 선택해주세요 (최대 3명)"
+msgstr ""
+
+#: app/templates/pages/survey.html:75
+msgid "반에서 의견을 잘 이끄는 친구를 선택해주세요 (최대 3명)"
+msgstr ""
+
+#: app/templates/pages/survey.html:94
+msgid "비밀을 털어놓을 수 있는 친구를 선택해주세요 (최대 3명)"
+msgstr ""
+
+#: app/templates/pages/survey.html:113
+msgid "자주 대화하는 친구를 선택해주세요 (최대 3명)"
+msgstr ""
+
+#: app/templates/pages/survey.html:132
+msgid "함께 활동하기 어려운 친구를 선택해주세요 (최대 2명, 선택 안해도 됨)"
+msgstr ""
+
+#: app/templates/pages/survey.html:134
+msgid "이 정보는 모둠 구성 참고용으로만 사용되며, 다른 학생에게 공개되지 않습니다."
+msgstr ""
+
+#: app/templates/pages/survey.html:153
+msgid "설문 제출하기"
+msgstr ""
+
+#: app/templates/pages/admin/dashboard.html:72
+#: app/templates/pages/survey_complete.html:3
+msgid "설문 완료"
+msgstr ""
+
+#: app/templates/pages/survey_complete.html:14
+msgid "설문 완료!"
+msgstr ""
+
+#: app/templates/pages/survey_complete.html:16
+msgid "님, 설문에 참여해주셔서 감사합니다."
+msgstr ""
+
+#: app/templates/pages/survey_complete.html:17
+msgid "소중한 의견이 반영되었습니다."
+msgstr ""
+
+#: app/templates/pages/survey_complete.html:25
+#: app/templates/pages/teacher_verify.html:46
+msgid "홈으로 돌아가기"
+msgstr ""
+
+#: app/templates/pages/survey_complete.html:30
+msgid "이 창을 닫으셔도 됩니다."
+msgstr ""
+
+#: app/templates/pages/teacher_dashboard.html:4
+msgid "교사 대시보드"
+msgstr ""
+
+#: app/templates/pages/teacher_dashboard.html:27
+msgid "안녕하세요,"
+msgstr ""
+
+#: app/templates/pages/teacher_dashboard.html:27
+msgid "님"
+msgstr ""
+
+#: app/templates/pages/teacher_dashboard.html:33
+#: app/templates/pages/teacher_dashboard.html:109
+msgid "새 학급 만들기"
+msgstr ""
+
+#: app/templates/pages/teacher_dashboard.html:62
+msgid "설문 진행중"
+msgstr ""
+
+#: app/templates/pages/teacher_dashboard.html:62
+msgid "설문 대기"
+msgstr ""
+
+#: app/templates/pages/teacher_dashboard.html:69
+msgid "학생 수"
+msgstr ""
+
+#: app/templates/pages/teacher_dashboard.html:73
+msgid "응답 완료"
+msgstr ""
+
+#: app/templates/pages/teacher_dashboard.html:82
+msgid "설문 종료"
+msgstr ""
+
+#: app/templates/pages/teacher_dashboard.html:91
+msgid "분석하기"
+msgstr ""
+
+#: app/templates/pages/teacher_dashboard.html:100
+msgid "위의 가이드를 따라 학급을 생성해주세요."
+msgstr ""
+
+#: app/templates/pages/teacher_dashboard.html:112
+msgid "학급 이름"
+msgstr ""
+
+#: app/templates/pages/teacher_dashboard.html:113
+msgid "예: 3학년 2반"
+msgstr ""
+
+#: app/templates/pages/teacher_dashboard.html:116
+msgid "설명 (선택)"
+msgstr ""
+
+#: app/templates/pages/teacher_dashboard.html:117
+msgid "학급에 대한 설명"
+msgstr ""
+
+#: app/templates/pages/teacher_dashboard.html:121
+msgid "생성"
+msgstr ""
+
+#: app/templates/pages/teacher_dashboard.html:131
+msgid "학급 관리"
+msgstr ""
+
+#: app/templates/pages/teacher_dashboard.html:142
+msgid "학생들에게 이 코드를 공유하세요"
+msgstr ""
+
+#: app/templates/pages/teacher_dashboard.html:146
+msgid "복사"
+msgstr ""
+
+#: app/templates/pages/teacher_dashboard.html:149
+msgid "참여 URL:"
+msgstr ""
+
+#: app/templates/pages/teacher_dashboard.html:155
+msgid "학생 명단"
+msgstr ""
+
+#: app/templates/pages/teacher_dashboard.html:162
+msgid "양식 다운로드"
+msgstr ""
+
+#: app/templates/pages/teacher_dashboard.html:171
+#: app/templates/pages/upload.html:48
+msgid "파일 업로드"
+msgstr ""
+
+#: app/templates/pages/teacher_dashboard.html:190
+msgid "학급 삭제"
+msgstr ""
+
+#: app/templates/pages/teacher_dashboard.html:210
+msgid "학생 이름"
+msgstr ""
+
+#: app/templates/pages/teacher_dashboard.html:214
+msgid "학생 이름을 입력하세요"
+msgstr ""
+
+#: app/templates/pages/teacher_dashboard.html:214
+msgid "(엔터로 줄바꿈하여 여러 명 입력 가능)"
+msgstr ""
+
+#: app/templates/pages/teacher_dashboard.html:214
+msgid "예시:"
+msgstr ""
+
+#: app/templates/pages/teacher_dashboard.html:216
+msgid "한 줄에 한 명씩 입력하세요"
+msgstr ""
+
+#: app/templates/pages/teacher_dashboard.html:220
+msgid "추가"
+msgstr ""
+
+#: app/templates/pages/teacher_dashboard.html:343
+msgid "등록된 학생이 없습니다."
+msgstr ""
+
+#: app/templates/pages/teacher_dashboard.html:350
+msgid "응답완료"
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:120
+#: app/templates/pages/teacher_dashboard.html:359
+msgid "초기화"
+msgstr ""
+
+#: app/templates/pages/teacher_dashboard.html:459
+msgid "\""
+msgstr ""
+
+#: app/templates/pages/teacher_dashboard.html:459
+msgid "\" 학생의 설문 응답을 초기화하시겠습니까?"
+msgstr ""
+
+#: app/templates/pages/teacher_verify.html:3
+#: app/templates/pages/teacher_verify.html:14
+msgid "교사 인증"
+msgstr ""
+
+#: app/templates/pages/teacher_verify.html:15
+msgid "교사 전용 가입 코드를 입력해주세요"
+msgstr ""
+
+#: app/templates/pages/teacher_verify.html:20
+msgid "가입 코드"
+msgstr ""
+
+#: app/templates/pages/teacher_verify.html:26
+msgid "가입 코드를 입력하세요"
+msgstr ""
+
+#: app/templates/pages/teacher_verify.html:32
+msgid "가입 코드는 학교 관리자에게 문의하세요."
+msgstr ""
+
+#: app/templates/pages/teacher_verify.html:40
+msgid "인증 후 Google 로그인"
+msgstr ""
+
+#: app/templates/pages/upload.html:3 app/templates/pages/upload.html:7
+msgid "데이터 업로드"
+msgstr ""
+
+#: app/templates/pages/upload.html:8
+msgid "설문조사 데이터를 업로드하여 네트워크 분석을 시작하세요."
+msgstr ""
+
+#: app/templates/pages/upload.html:19
+msgid "구글 시트 URL"
+msgstr ""
+
+#: app/templates/pages/upload.html:24
+msgid "시트 URL"
+msgstr ""
+
+#: app/templates/pages/upload.html:29
+msgid "공개 설정된 구글 시트 URL을 입력하세요."
+msgstr ""
+
+#: app/templates/pages/upload.html:35
+msgid "불러오기"
+msgstr ""
+
+#: app/templates/pages/upload.html:56
+msgid "파일을 드래그하거나 클릭하여 선택"
+msgstr ""
+
+#: app/templates/pages/upload.html:57
+msgid "CSV, Excel 파일 지원"
+msgstr ""
+
+#: app/templates/pages/upload.html:82
+msgid "업로드 및 분석"
+msgstr ""
+
+#: app/templates/pages/upload.html:90
+msgid "예시 데이터로 시작하기"
+msgstr ""
+
+#: app/templates/pages/upload.html:91
+msgid "처음이시라면 예시 데이터로 기능을 체험해보세요."
+msgstr ""
+
+#: app/templates/pages/upload.html:97
+msgid "예시 1: 친구 관계"
+msgstr ""
+
+#: app/templates/pages/upload.html:103
+msgid "예시 2: 협업 선호도"
+msgstr ""
+
+#: app/templates/pages/upload.html:110
+msgid "데이터 형식 안내"
+msgstr ""
+
+#: app/templates/pages/upload.html:115
+msgid "타임스탬프"
+msgstr ""
+
+#: app/templates/pages/admin/dashboard.html:114
+#: app/templates/pages/upload.html:116
+msgid "이름"
+msgstr ""
+
+#: app/templates/pages/upload.html:117
+msgid "좋아하는 친구"
+msgstr ""
+
+#: app/templates/pages/upload.html:118
+msgid "함께 공부하고 싶은 친구"
+msgstr ""
+
+#: app/templates/pages/upload.html:138
+msgid "여러 명을 선택한 경우 세미콜론(;)으로 구분합니다."
+msgstr ""
+
+#: app/templates/pages/admin/dashboard.html:2
+#: app/templates/pages/admin/dashboard.html:8
+msgid "관리자 대시보드"
+msgstr ""
+
+#: app/templates/pages/admin/dashboard.html:9
+msgid "시스템 현황 및 사용자 통계"
+msgstr ""
+
+#: app/templates/pages/admin/dashboard.html:18
+msgid "총 교사"
+msgstr ""
+
+#: app/templates/pages/admin/dashboard.html:28
+msgid "최근 7일"
+msgstr ""
+
+#: app/templates/pages/admin/dashboard.html:36
+msgid "총 학급"
+msgstr ""
+
+#: app/templates/pages/admin/dashboard.html:46
+#: app/templates/pages/admin/teachers.html:29
+#: app/templates/pages/admin/teachers.html:102
+msgid "활성"
+msgstr ""
+
+#: app/templates/pages/admin/dashboard.html:54
+msgid "총 학생"
+msgstr ""
+
+#: app/templates/pages/admin/dashboard.html:64
+msgid "평균"
+msgstr ""
+
+#: app/templates/pages/admin/dashboard.html:64
+msgid "/학급"
+msgstr ""
+
+#: app/templates/pages/admin/dashboard.html:82
+msgid "완료율"
+msgstr ""
+
+#: app/templates/pages/admin/dashboard.html:91
+msgid "일별 가입자 수"
+msgstr ""
+
+#: app/templates/pages/admin/dashboard.html:91
+#: app/templates/pages/admin/dashboard.html:97
+msgid "최근 30일"
+msgstr ""
+
+#: app/templates/pages/admin/dashboard.html:97
+msgid "일별 활성 사용자"
+msgstr ""
+
+#: app/templates/pages/admin/dashboard.html:105
+msgid "최근 가입 교사"
+msgstr ""
+
+#: app/templates/pages/admin/dashboard.html:107
+msgid "전체 보기"
+msgstr ""
+
+#: app/templates/pages/admin/dashboard.html:115
+#: app/templates/pages/admin/teachers.html:44
+msgid "이메일"
+msgstr ""
+
+#: app/templates/pages/admin/dashboard.html:116
+#: app/templates/pages/admin/teachers.html:45
+msgid "가입일"
+msgstr ""
+
+#: app/templates/pages/admin/dashboard.html:117
+#: app/templates/pages/admin/teachers.html:46
+msgid "마지막 로그인"
+msgstr ""
+
+#: app/templates/pages/admin/dashboard.html:118
+msgid "학급 수"
+msgstr ""
+
+#: app/templates/pages/admin/dashboard.html:161
+msgid "가입자"
+msgstr ""
+
+#: app/templates/pages/admin/dashboard.html:194
+msgid "활성 사용자"
+msgstr ""
+
+#: app/templates/pages/admin/teachers.html:2
+#: app/templates/pages/admin/teachers.html:14
+msgid "교사 목록"
+msgstr ""
+
+#: app/templates/pages/admin/teachers.html:16
+msgid "전체 등록 교사 관리"
+msgstr ""
+
+#: app/templates/pages/admin/teachers.html:16
+#: app/templates/pages/analysis/classroom_result.html:330
+msgid "명"
+msgstr ""
+
+#: app/templates/pages/admin/teachers.html:23
+msgid "이름 또는 이메일로 검색..."
+msgstr ""
+
+#: app/templates/pages/admin/teachers.html:28
+msgid "전체"
+msgstr ""
+
+#: app/templates/pages/admin/teachers.html:29
+msgid "일 내 로그인"
+msgstr ""
+
+#: app/templates/pages/admin/teachers.html:30
+#: app/templates/pages/admin/teachers.html:112
+msgid "비활성"
+msgstr ""
+
+#: app/templates/pages/admin/teachers.html:31
+msgid "관리자"
+msgstr ""
+
+#: app/templates/pages/admin/teachers.html:43
+msgid "교사"
+msgstr ""
+
+#: app/templates/pages/admin/teachers.html:47
+msgid "학급"
+msgstr ""
+
+#: app/templates/pages/admin/teachers.html:48
+#: app/templates/pages/analysis/classroom_result.html:231
+msgid "학생"
+msgstr ""
+
+#: app/templates/pages/admin/teachers.html:49
+msgid "상태"
+msgstr ""
+
+#: app/templates/pages/admin/teachers.html:84
+msgid "없음"
+msgstr ""
+
+#: app/templates/pages/admin/teachers.html:107
+msgid "보통"
+msgstr ""
+
+#: app/templates/pages/admin/teachers.html:127
+msgid "등록된 교사가 없습니다."
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:17
+msgid "관계 분석"
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:18
+msgid "분석 일시:"
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:18
+msgid "알 수 없음"
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:25
+msgid "다시 분석"
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:31
+msgid "대시보드로"
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:47
+msgid "긴급"
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:48
+msgid "관계 갈등 경고"
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:52
+msgid "자세히 보기"
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:66
+msgid "회피 관계 분석"
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:84
+msgid "AI 분석 해석"
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:87
+msgid "AI 해석을 불러오는 중..."
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:95
+msgid "전체 학생"
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:99
+msgid "관계 수"
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:103
+msgid "발견된 그룹"
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:107
+msgid "네트워크 밀도"
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:114
+msgid "관계 네트워크"
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:130
+#: app/templates/pages/analysis/classroom_result.html:358
+msgid "전체 네트워크"
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:134
+#: app/templates/pages/analysis/classroom_result.html:359
+msgid "친한 친구"
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:138
+#: app/templates/pages/analysis/classroom_result.html:360
+msgid "도움 친구"
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:142
+#: app/templates/pages/analysis/classroom_result.html:361
+msgid "협력 친구"
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:146
+#: app/templates/pages/analysis/classroom_result.html:243
+#: app/templates/pages/analysis/classroom_result.html:362
+msgid "리더십"
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:150
+#: app/templates/pages/analysis/classroom_result.html:363
+msgid "신뢰 친구"
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:154
+#: app/templates/pages/analysis/classroom_result.html:364
+msgid "소통 잘함"
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:158
+#: app/templates/pages/analysis/classroom_result.html:365
+msgid "회피 관계"
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:179
+msgid "학생 필터"
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:185
+msgid "전체 선택"
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:186
+msgid "전체 해제"
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:188
+msgid "필터 적용"
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:202
+#: app/templates/pages/analysis/classroom_result.html:206
+#: app/templates/pages/analysis/classroom_result.html:210
+#: app/templates/pages/analysis/classroom_result.html:214
+#: app/templates/pages/analysis/classroom_result.html:329
+msgid "그룹"
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:224
+msgid "관계 유형별 통계 표"
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:232
+msgid "받은 친한 친구 선택 수"
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:233
+msgid "친한친구"
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:234
+msgid "친구"
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:236
+msgid "받은 도움 친구 선택 수"
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:237
+msgid "도움"
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:239
+msgid "받은 협력 친구 선택 수"
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:240
+msgid "협력"
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:242
+msgid "받은 리더십 선택 수"
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:244
+msgid "리더"
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:246
+msgid "받은 신뢰 선택 수"
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:247
+msgid "신뢰"
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:249
+msgid "받은 소통 선택 수"
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:250
+msgid "소통"
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:252
+msgid "받은 회피 선택 수"
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:253
+msgid "회피"
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:255
+msgid "총 받은 선택 수"
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:255
+msgid "합계"
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:263
+msgid "각 숫자는 해당 학생이 다른 학생들로부터 받은 선택 수입니다."
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:274
+msgid "인기도 순위 (In-Degree)"
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:276
+msgid "다른 학생들이 많이 선택한 학생"
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:286
+msgid "매개 중심성 순위 (Betweenness)"
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:288
+msgid "서로 다른 그룹을 연결하는 학생"
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:297
+msgid "그룹(커뮤니티) 분석"
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:321
+msgid "저장된 분석 결과입니다. AI 해석을 보려면 다시 분석 버튼을 클릭하세요."
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:322
+msgid "분석이 완료되었습니다!"
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:324
+msgid "레이어 데이터를 불러올 수 없습니다."
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:325
+msgid "레이어 데이터를 불러오는 중 오류가 발생했습니다."
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:326
+msgid "관계 데이터가 없습니다."
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:327
+msgid "아직 명확한 그룹이 형성되지 않았습니다."
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:328
+msgid "더 많은 학생들의 설문 응답이 필요합니다."
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:331
+msgid "노드"
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:332
+msgid "연결"
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:333
+msgid "회피 관계 (한 방향)"
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:334
+msgid "회피 관계 관련 학생"
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:335
+msgid "관계 학생"
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:336
+msgid "전체 선택됨"
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:337
+msgid "선택"
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:338
+msgid "최소 1명 이상의 학생을 선택해주세요."
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:339
+msgid "명의 학생으로 필터링되었습니다."
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:340
+msgid "위험"
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:341
+msgid "주의"
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:342
+msgid "관심필요"
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:343
+msgid "양호"
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:344
+msgid "상호 회피"
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:345
+msgid "회피 대상자"
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:346
+msgid "총 경고"
+msgstr ""
+
+#: app/templates/pages/analysis/classroom_result.html:347
+msgid "관련 학생"
+msgstr ""
+
+#: app/views/analysis.py:20
+msgid "권한이 없습니다."
+msgstr ""
+
+#: app/views/analysis.py:29
+msgid "분석 결과가 없습니다. 먼저 분석을 실행해주세요."
+msgstr ""
+
+#: app/views/analysis.py:43 app/views/analysis.py:52 app/views/analysis.py:61
+#: app/views/analysis.py:70 app/views/analysis.py:79 app/views/analysis.py:88
+msgid "먼저 데이터를 업로드해주세요."
+msgstr ""
+
+#: app/views/auth.py:77
+msgid "유효하지 않은 가입 코드입니다."
+msgstr ""
+
+#: app/views/auth.py:107
+msgid "Google 계정 정보를 가져올 수 없습니다."
+msgstr ""
+
+#: app/views/auth.py:124
+#, python-format
+msgid "환영합니다, %(name)s님! 계정이 생성되었습니다."
+msgstr ""
+
+#: app/views/auth.py:131
+#, python-format
+msgid "안녕하세요, %(name)s님!"
+msgstr ""
+
+#: app/views/auth.py:155
+msgid "로그인 중 오류가 발생했습니다."
+msgstr ""
+
+#: app/views/auth.py:164
+msgid "로그아웃되었습니다."
+msgstr ""
+
+#: app/views/student.py:20
+msgid "학급 코드를 입력해주세요."
+msgstr ""
+
+#: app/views/student.py:27 app/views/student.py:46
+msgid "유효하지 않은 학급 코드입니다."
+msgstr ""
+
+#: app/views/student.py:31
+msgid "현재 설문이 진행 중이 아닙니다. 선생님께 문의해주세요."
+msgstr ""
+
+#: app/views/student.py:50
+msgid "현재 설문이 진행 중이 아닙니다."
+msgstr ""
+
+#: app/views/student.py:75
+msgid "이름을 선택해주세요."
+msgstr ""
+
+#: app/views/student.py:81
+msgid "유효하지 않은 선택입니다."
+msgstr ""
+
+#: app/views/student.py:85
+msgid "이미 응답을 완료한 학생입니다."
+msgstr ""
+
+#: app/views/student.py:95
+#, python-format
+msgid "%(name)s님, 환영합니다!"
+msgstr ""
+
+#: app/views/student.py:106
+msgid "먼저 이름을 선택해주세요."
+msgstr ""
+
+#: app/views/student.py:120
+msgid "이미 설문에 응답하셨습니다."
+msgstr ""
+
+#: app/views/student.py:165
+msgid "설문이 완료되었습니다. 감사합니다!"
+msgstr ""
+
+#: app/views/student.py:202
+msgid "종료되었습니다."
+msgstr ""
+

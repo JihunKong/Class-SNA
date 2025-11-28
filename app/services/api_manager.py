@@ -1,14 +1,13 @@
 """
-Google Gemini API 매니저
-Flask 버전 - Streamlit 의존성 제거
+Upstage Solar API 매니저
+Flask 버전 - OpenAI 호환 API 사용
 """
-import google.generativeai as genai
+from openai import OpenAI
 import logging
 import time
 import requests
 import json
 import os
-import random
 
 # 로깅 설정
 logging.basicConfig(level=logging.INFO)
@@ -16,57 +15,36 @@ logger = logging.getLogger(__name__)
 
 
 class APIManager:
-    """Google Gemini API 통신을 관리하는 클래스"""
+    """Upstage Solar API 통신을 관리하는 클래스"""
 
-    def __init__(self, api_keys=None, model=None):
+    def __init__(self, api_key=None, model=None):
         """
         APIManager 초기화
 
         Args:
-            api_keys: API 키 리스트 (없으면 환경변수에서 로드)
-            model: Gemini 모델명 (없으면 환경변수 또는 기본값 사용)
+            api_key: API 키 (없으면 환경변수에서 로드)
+            model: 모델명 (없으면 환경변수 또는 기본값 사용)
         """
-        self.api_keys = api_keys or self._load_api_keys()
-        self.current_api_key = None
-        self.model = model or os.environ.get('GEMINI_MODEL', 'gemini-2.0-flash')
+        self.api_key = api_key or os.environ.get('UPSTAGE_API_KEY', '')
+        self.model = model or os.environ.get('UPSTAGE_MODEL', 'solar-pro2')
+        self.base_url = 'https://api.upstage.ai/v1'
+        self.client = None
         self.setup_api()
 
-    def _load_api_keys(self):
-        """환경변수에서 API 키 로드"""
-        keys_str = os.environ.get('GOOGLE_API_KEYS', '')
-        if keys_str:
-            return [k.strip() for k in keys_str.split(',') if k.strip()]
-        return []
-
-    def _get_random_api_key(self):
-        """랜덤 API 키 선택"""
-        if not self.api_keys:
-            raise ValueError("API 키가 설정되지 않았습니다. GOOGLE_API_KEYS 환경변수를 확인해주세요.")
-        return random.choice(self.api_keys)
-
     def setup_api(self):
-        """API 키 설정 및 Gemini 모델 초기화"""
+        """API 클라이언트 초기화"""
         try:
-            self.current_api_key = self._get_random_api_key()
-            genai.configure(api_key=self.current_api_key)
+            if not self.api_key:
+                logger.warning("API 키가 설정되지 않았습니다. UPSTAGE_API_KEY 환경변수를 확인해주세요.")
+                return
+
+            self.client = OpenAI(
+                api_key=self.api_key,
+                base_url=self.base_url
+            )
             logger.info(f"API 설정 완료: 모델 {self.model} 사용")
-        except ValueError as e:
+        except Exception as e:
             logger.error(f"API 설정 실패: {str(e)}")
-            raise
-
-    def switch_api_key(self):
-        """다른 API 키로 전환"""
-        previous_key = self.current_api_key
-        try:
-            attempts = 0
-            while self.current_api_key == previous_key and attempts < 10:
-                self.current_api_key = self._get_random_api_key()
-                attempts += 1
-
-            genai.configure(api_key=self.current_api_key)
-            logger.info("새로운 API 키로 전환 완료")
-        except ValueError as e:
-            logger.error(f"API 키 전환 실패: {str(e)}")
             raise
 
     def request_data(self, url, max_retries=3):
@@ -212,29 +190,41 @@ class APIManager:
         }
 
     def generate_response(self, prompt, max_retries=3):
-        """Gemini API를 사용하여 응답 생성"""
+        """Upstage Solar API를 사용하여 응답 생성"""
+        if not self.client:
+            logger.warning("API 클라이언트가 초기화되지 않았습니다.")
+            return self._get_fallback_response()
+
         retries = 0
 
         while retries < max_retries:
             try:
-                model = genai.GenerativeModel(self.model)
-                response = model.generate_content(prompt)
-                return response.text
+                response = self.client.chat.completions.create(
+                    model=self.model,
+                    messages=[
+                        {"role": "user", "content": prompt}
+                    ]
+                )
+                return response.choices[0].message.content
 
             except Exception as e:
                 logger.error(f"API 오류 발생: {str(e)}")
                 retries += 1
 
                 if retries < max_retries:
-                    logger.info(f"API 키 전환 후 {retries}/{max_retries} 재시도 중...")
-                    try:
-                        self.switch_api_key()
-                        time.sleep(1)
-                    except ValueError:
-                        raise ValueError("API 키가 설정되지 않았습니다.")
+                    logger.info(f"{retries}/{max_retries} 재시도 중...")
+                    time.sleep(1)
                 else:
                     logger.error("최대 재시도 횟수 초과")
                     raise Exception("API 요청 실패. 잠시 후 다시 시도해주세요.")
+
+    def _get_fallback_response(self):
+        """API 사용 불가 시 기본 응답"""
+        return json.dumps({
+            "relationships": [],
+            "students": [],
+            "question_types": {}
+        })
 
     def analyze_survey_data(self, survey_data, survey_questions=None):
         """설문 데이터 구조 분석 및 관계형 데이터 변환 요청"""
@@ -282,25 +272,11 @@ class APIManager:
     def generate_text(self, prompt):
         """텍스트 생성 API를 호출합니다."""
         try:
-            if not self.current_api_key:
-                logger.warning("API 키가 없어 텍스트 생성을 건너뜁니다.")
+            if not self.client:
+                logger.warning("API 클라이언트가 없어 텍스트 생성을 건너뜁니다.")
                 return None
 
-            return self._generate_with_gemini(prompt)
+            return self.generate_response(prompt)
         except Exception as e:
             logger.error(f"텍스트 생성 중 오류: {e}")
-            return None
-
-    def _generate_with_gemini(self, prompt):
-        """Google Gemini API를 사용하여 텍스트를 생성합니다."""
-        try:
-            genai.configure(api_key=self.current_api_key)
-            model = genai.GenerativeModel('gemini-1.5-pro')
-            response = model.generate_content(prompt)
-            return response.text
-        except ImportError:
-            logger.error("Google Generative AI 패키지가 설치되어 있지 않습니다.")
-            return None
-        except Exception as e:
-            logger.error(f"Gemini API 호출 중 오류: {e}")
             return None

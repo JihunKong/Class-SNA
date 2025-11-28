@@ -9,11 +9,12 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONPATH=/app \
     FLASK_ENV=production
 
-# 시스템 의존성 설치
+# 시스템 의존성 설치 (한글 폰트 포함)
 RUN apt-get update && apt-get install -y --no-install-recommends \
     gcc \
     libpq-dev \
     curl \
+    fonts-nanum \
     && rm -rf /var/lib/apt/lists/*
 
 # 작업 디렉토리 설정
@@ -26,6 +27,9 @@ RUN pip install --no-cache-dir --upgrade pip && \
 
 # 애플리케이션 코드 복사
 COPY . .
+
+# 정적 파일 권한 설정 (nginx/appuser가 읽을 수 있도록)
+RUN chmod -R 755 /app/app/static
 
 # 비루트 사용자 생성 및 전환
 RUN useradd --create-home appuser && \

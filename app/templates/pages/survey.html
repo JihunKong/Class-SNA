@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 
-{% block title %}설문 - {{ classroom.name }}{% endblock %}
+{% block title %}{{ _('설문조사') }} - {{ classroom.name }}{% endblock %}
 
 {% block content %}
 <div class="max-w-3xl mx-auto">
     <div class="glass-card fade-in">
         <div class="text-center mb-8">
-            <h1 class="text-2xl font-bold text-white mb-2">{{ classroom.name }} 설문</h1>
-            <p class="text-white/60">{{ student.name }}님, 아래 질문에 답해주세요</p>
+            <h1 class="text-2xl font-bold text-white mb-2">{{ classroom.name }} {{ _('설문조사') }}</h1>
+            <p class="text-white/60">{{ student.name }}{{ _('님, 아래 질문에 답해주세요') }}</p>
         </div>
 
         <form id="survey-form" class="space-y-8">
@@ -15,7 +15,7 @@
             <div class="survey-question">
                 <h3 class="text-lg font-medium text-white mb-4">
                     <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-blue-500/30 text-blue-300 text-sm mr-2">1</span>
-                    친하게 지내고 싶은 친구를 선택해주세요 (최대 5명)
+                    {{ _('친하게 지내고 싶은 친구를 선택해주세요 (최대 5명)') }}
                 </h3>
                 <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
                     {% for s in other_students %}
@@ -27,14 +27,14 @@
                     </label>
                     {% endfor %}
                 </div>
-                <p class="text-white/40 text-sm mt-2">선택된 친구: <span id="friend-count">0</span>/5</p>
+                <p class="text-white/40 text-sm mt-2">{{ _('선택된 친구:') }} <span id="friend-count">0</span>/5</p>
             </div>
 
             <!-- 질문 2: 도움을 주는 친구 -->
             <div class="survey-question">
                 <h3 class="text-lg font-medium text-white mb-4">
                     <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-green-500/30 text-green-300 text-sm mr-2">2</span>
-                    공부나 과제할 때 도움을 주는 친구를 선택해주세요 (최대 3명)
+                    {{ _('공부나 과제할 때 도움을 주는 친구를 선택해주세요 (최대 3명)') }}
                 </h3>
                 <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
                     {% for s in other_students %}
@@ -46,14 +46,14 @@
                     </label>
                     {% endfor %}
                 </div>
-                <p class="text-white/40 text-sm mt-2">선택된 친구: <span id="helper-count">0</span>/3</p>
+                <p class="text-white/40 text-sm mt-2">{{ _('선택된 친구:') }} <span id="helper-count">0</span>/3</p>
             </div>
 
             <!-- 질문 3: 함께 활동하고 싶은 친구 -->
             <div class="survey-question">
                 <h3 class="text-lg font-medium text-white mb-4">
                     <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-purple-500/30 text-purple-300 text-sm mr-2">3</span>
-                    모둠 활동을 함께 하고 싶은 친구를 선택해주세요 (최대 3명)
+                    {{ _('모둠 활동을 함께 하고 싶은 친구를 선택해주세요 (최대 3명)') }}
                 </h3>
                 <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
                     {% for s in other_students %}
@@ -65,7 +65,84 @@
                     </label>
                     {% endfor %}
                 </div>
-                <p class="text-white/40 text-sm mt-2">선택된 친구: <span id="teammate-count">0</span>/3</p>
+                <p class="text-white/40 text-sm mt-2">{{ _('선택된 친구:') }} <span id="teammate-count">0</span>/3</p>
+            </div>
+
+            <!-- 질문 4: 영향력 있는 친구 (리더) -->
+            <div class="survey-question">
+                <h3 class="text-lg font-medium text-white mb-4">
+                    <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-yellow-500/30 text-yellow-300 text-sm mr-2">4</span>
+                    {{ _('반에서 의견을 잘 이끄는 친구를 선택해주세요 (최대 3명)') }}
+                </h3>
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+                    {% for s in other_students %}
+                    <label class="cursor-pointer">
+                        <input type="checkbox" name="leaders" value="{{ s.id }}" class="hidden peer leader-checkbox">
+                        <div class="p-3 rounded-lg bg-white/5 border border-white/10 text-center text-sm transition-all peer-checked:bg-yellow-500/30 peer-checked:border-yellow-400 hover:bg-white/10">
+                            {{ s.name }}
+                        </div>
+                    </label>
+                    {% endfor %}
+                </div>
+                <p class="text-white/40 text-sm mt-2">{{ _('선택된 친구:') }} <span id="leader-count">0</span>/3</p>
+            </div>
+
+            <!-- 질문 5: 신뢰하는 친구 -->
+            <div class="survey-question">
+                <h3 class="text-lg font-medium text-white mb-4">
+                    <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-pink-500/30 text-pink-300 text-sm mr-2">5</span>
+                    {{ _('비밀을 털어놓을 수 있는 친구를 선택해주세요 (최대 3명)') }}
+                </h3>
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+                    {% for s in other_students %}
+                    <label class="cursor-pointer">
+                        <input type="checkbox" name="trust" value="{{ s.id }}" class="hidden peer trust-checkbox">
+                        <div class="p-3 rounded-lg bg-white/5 border border-white/10 text-center text-sm transition-all peer-checked:bg-pink-500/30 peer-checked:border-pink-400 hover:bg-white/10">
+                            {{ s.name }}
+                        </div>
+                    </label>
+                    {% endfor %}
+                </div>
+                <p class="text-white/40 text-sm mt-2">{{ _('선택된 친구:') }} <span id="trust-count">0</span>/3</p>
+            </div>
+
+            <!-- 질문 6: 소통하는 친구 -->
+            <div class="survey-question">
+                <h3 class="text-lg font-medium text-white mb-4">
+                    <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-teal-500/30 text-teal-300 text-sm mr-2">6</span>
+                    {{ _('자주 대화하는 친구를 선택해주세요 (최대 3명)') }}
+                </h3>
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+                    {% for s in other_students %}
+                    <label class="cursor-pointer">
+                        <input type="checkbox" name="communication" value="{{ s.id }}" class="hidden peer communication-checkbox">
+                        <div class="p-3 rounded-lg bg-white/5 border border-white/10 text-center text-sm transition-all peer-checked:bg-teal-500/30 peer-checked:border-teal-400 hover:bg-white/10">
+                            {{ s.name }}
+                        </div>
+                    </label>
+                    {% endfor %}
+                </div>
+                <p class="text-white/40 text-sm mt-2">{{ _('선택된 친구:') }} <span id="communication-count">0</span>/3</p>
+            </div>
+
+            <!-- 질문 7: 함께 활동하기 어려운 친구 (회피) -->
+            <div class="survey-question">
+                <h3 class="text-lg font-medium text-white mb-4">
+                    <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-red-500/30 text-red-300 text-sm mr-2">7</span>
+                    {{ _('함께 활동하기 어려운 친구를 선택해주세요 (최대 2명, 선택 안해도 됨)') }}
+                </h3>
+                <p class="text-white/40 text-sm mb-4">* {{ _('이 정보는 모둠 구성 참고용으로만 사용되며, 다른 학생에게 공개되지 않습니다.') }}</p>
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+                    {% for s in other_students %}
+                    <label class="cursor-pointer">
+                        <input type="checkbox" name="avoidance" value="{{ s.id }}" class="hidden peer avoidance-checkbox">
+                        <div class="p-3 rounded-lg bg-white/5 border border-white/10 text-center text-sm transition-all peer-checked:bg-red-500/30 peer-checked:border-red-400 hover:bg-white/10">
+                            {{ s.name }}
+                        </div>
+                    </label>
+                    {% endfor %}
+                </div>
+                <p class="text-white/40 text-sm mt-2">{{ _('선택된 친구:') }} <span id="avoidance-count">0</span>/2</p>
             </div>
 
             <div class="pt-6 border-t border-white/10">
@@ -73,7 +150,7 @@
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>
-                    설문 제출하기
+                    {{ _('설문 제출하기') }}
                 </button>
             </div>
         </form>
@@ -105,6 +182,10 @@
     limitCheckboxes('friend-checkbox', 5, 'friend-count');
     limitCheckboxes('helper-checkbox', 3, 'helper-count');
     limitCheckboxes('teammate-checkbox', 3, 'teammate-count');
+    limitCheckboxes('leader-checkbox', 3, 'leader-count');
+    limitCheckboxes('trust-checkbox', 3, 'trust-count');
+    limitCheckboxes('communication-checkbox', 3, 'communication-count');
+    limitCheckboxes('avoidance-checkbox', 2, 'avoidance-count');
 
     // 폼 제출
     document.getElementById('survey-form').addEventListener('submit', async function(e) {
@@ -113,9 +194,15 @@
         const friends = Array.from(document.querySelectorAll('.friend-checkbox:checked')).map(c => c.value);
         const helpers = Array.from(document.querySelectorAll('.helper-checkbox:checked')).map(c => c.value);
         const teammates = Array.from(document.querySelectorAll('.teammate-checkbox:checked')).map(c => c.value);
+        const leaders = Array.from(document.querySelectorAll('.leader-checkbox:checked')).map(c => c.value);
+        const trust = Array.from(document.querySelectorAll('.trust-checkbox:checked')).map(c => c.value);
+        const communication = Array.from(document.querySelectorAll('.communication-checkbox:checked')).map(c => c.value);
+        const avoidance = Array.from(document.querySelectorAll('.avoidance-checkbox:checked')).map(c => c.value);
 
-        if (friends.length === 0 && helpers.length === 0 && teammates.length === 0) {
-            alert('최소 한 개 이상의 항목에 답해주세요.');
+        // 최소 하나의 긍정적 질문에 답해야 함 (회피는 선택)
+        if (friends.length === 0 && helpers.length === 0 && teammates.length === 0 &&
+            leaders.length === 0 && trust.length === 0 && communication.length === 0) {
+            showToast(t('js.survey.min_selection'), 'warning');
             return;
         }
 
@@ -130,7 +217,11 @@
                 body: JSON.stringify({
                     friends: friends,
                     helpers: helpers,
-                    teammates: teammates
+                    teammates: teammates,
+                    leaders: leaders,
+                    trust: trust,
+                    communication: communication,
+                    avoidance: avoidance
                 })
             });
 
@@ -139,10 +230,10 @@
             if (data.success) {
                 window.location.href = data.redirect;
             } else {
-                alert(data.error || '제출 중 오류가 발생했습니다.');
+                showToast(data.error || t('js.error.generic'), 'error');
             }
         } catch (error) {
-            alert('제출 중 오류가 발생했습니다.');
+            showToast(t('js.error.generic'), 'error');
         } finally {
             hideLoading();
         }

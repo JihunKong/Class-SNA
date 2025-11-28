@@ -166,12 +166,31 @@ body {
 }
 
 .glass-btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm) var(--spacing-lg);
     background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
     border: none;
+    border-radius: var(--radius-full);
+    color: var(--text-light);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    text-decoration: none;
 }
 
 .glass-btn-primary:hover {
     background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(31, 38, 135, 0.3);
+}
+
+.glass-btn-primary:active {
+    transform: translateY(0);
 }
 
 .glass-btn-outline {

@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}설문 완료{% endblock %}
+{% block title %}{{ _('설문 완료') }}{% endblock %}
 
 {% block content %}
 <div class="min-h-[70vh] flex items-center justify-center">
@@ -11,10 +11,10 @@
             </svg>
         </div>
 
-        <h1 class="text-2xl font-bold text-white mb-2">설문 완료!</h1>
+        <h1 class="text-2xl font-bold text-white mb-2">{{ _('설문 완료!') }}</h1>
         <p class="text-white/60 mb-8">
-            {{ student_name }}님, 설문에 참여해주셔서 감사합니다.<br>
-            소중한 의견이 반영되었습니다.
+            {{ student_name }}{{ _('님, 설문에 참여해주셔서 감사합니다.') }}<br>
+            {{ _('소중한 의견이 반영되었습니다.') }}
         </p>
 
         <div class="space-y-3">
@@ -22,12 +22,12 @@
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
                 </svg>
-                홈으로 돌아가기
+                {{ _('홈으로 돌아가기') }}
             </a>
         </div>
 
         <div class="mt-8 pt-6 border-t border-white/10">
-            <p class="text-white/40 text-sm">이 창을 닫으셔도 됩니다.</p>
+            <p class="text-white/40 text-sm">{{ _('이 창을 닫으셔도 됩니다.') }}</p>
         </div>
     </div>
 </div>

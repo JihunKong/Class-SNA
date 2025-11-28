@@ -3,6 +3,7 @@
 학급 코드 입력 → 이름 선택 → 설문 참여
 """
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash, jsonify
+from flask_babel import _
 
 from app.models import db, Classroom, Student, SurveyResponse
 
@@ -16,18 +17,18 @@ def join():
         code = request.form.get('code', '').strip().upper()
 
         if not code:
-            flash('학급 코드를 입력해주세요.', 'warning')
+            flash(_('학급 코드를 입력해주세요.'), 'warning')
             return redirect(url_for('student.join'))
 
         # 학급 확인
         classroom = Classroom.query.filter_by(code=code, is_active=True).first()
 
         if not classroom:
-            flash('유효하지 않은 학급 코드입니다.', 'error')
+            flash(_('유효하지 않은 학급 코드입니다.'), 'error')
             return redirect(url_for('student.join'))
 
         if not classroom.survey_active:
-            flash('현재 설문이 진행 중이 아닙니다. 선생님께 문의해주세요.', 'warning')
+            flash(_('현재 설문이 진행 중이 아닙니다. 선생님께 문의해주세요.'), 'warning')
             return redirect(url_for('student.join'))
 
         # 이름 선택 페이지로 이동
@@ -42,11 +43,11 @@ def select_name(code):
     classroom = Classroom.query.filter_by(code=code.upper(), is_active=True).first()
 
     if not classroom:
-        flash('유효하지 않은 학급 코드입니다.', 'error')
+        flash(_('유효하지 않은 학급 코드입니다.'), 'error')
         return redirect(url_for('student.join'))
 
     if not classroom.survey_active:
-        flash('현재 설문이 진행 중이 아닙니다.', 'warning')
+        flash(_('현재 설문이 진행 중이 아닙니다.'), 'warning')
         return redirect(url_for('student.join'))
 
     # 아직 응답하지 않은 학생 목록
@@ -71,17 +72,17 @@ def confirm_selection(code):
     student_id = request.form.get('student_id') or request.json.get('student_id')
 
     if not student_id:
-        flash('이름을 선택해주세요.', 'warning')
+        flash(_('이름을 선택해주세요.'), 'warning')
         return redirect(url_for('student.select_name', code=code))
 
     student = Student.query.get(student_id)
 
     if not student or student.classroom_id != classroom.id:
-        flash('유효하지 않은 선택입니다.', 'error')
+        flash(_('유효하지 않은 선택입니다.'), 'error')
         return redirect(url_for('student.select_name', code=code))
 
     if student.has_responded:
-        flash('이미 응답을 완료한 학생입니다.', 'warning')
+        flash(_('이미 응답을 완료한 학생입니다.'), 'warning')
         return redirect(url_for('student.select_name', code=code))
 
     # 세션에 학생 정보 저장
@@ -91,7 +92,7 @@ def confirm_selection(code):
     session['classroom_code'] = classroom.code
     session['is_student'] = True
 
-    flash(f'{student.name}님, 환영합니다!', 'success')
+    flash(_('%(name)s님, 환영합니다!', name=student.name), 'success')
 
     # 설문 페이지로 이동
     return redirect(url_for('student.survey', code=code))
@@ -102,7 +103,7 @@ def survey(code):
     """설문 페이지"""
     # 학생 세션 확인
     if not session.get('is_student') or session.get('classroom_code') != code.upper():
-        flash('먼저 이름을 선택해주세요.', 'warning')
+        flash(_('먼저 이름을 선택해주세요.'), 'warning')
         return redirect(url_for('student.select_name', code=code))
 
     classroom = Classroom.query.filter_by(code=code.upper()).first()
@@ -116,7 +117,7 @@ def survey(code):
 
     # 이미 응답했는지 확인
     if student.has_responded:
-        flash('이미 설문에 응답하셨습니다.', 'info')
+        flash(_('이미 설문에 응답하셨습니다.'), 'info')
         return redirect(url_for('student.complete', code=code))
 
     # 같은 학급의 다른 학생 목록 (자신 제외)
@@ -161,7 +162,7 @@ def submit_survey(code):
     db.session.add(response)
     db.session.commit()
 
-    flash('설문이 완료되었습니다. 감사합니다!', 'success')
+    flash(_('설문이 완료되었습니다. 감사합니다!'), 'success')
 
     # JSON 요청인 경우
     if request.is_json:
@@ -198,5 +199,5 @@ def leave():
     session.pop('classroom_code', None)
     session.pop('is_student', None)
 
-    flash('종료되었습니다.', 'info')
+    flash(_('종료되었습니다.'), 'info')
     return redirect(url_for('views.index'))

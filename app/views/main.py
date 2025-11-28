@@ -1,12 +1,27 @@
 """
 메인 페이지 라우트
 """
-from flask import render_template, redirect, url_for, request, session, flash
+from flask import render_template, redirect, url_for, request, session, flash, make_response, current_app
 from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename
 import os
 
 from app.views import views_bp
+
+
+@views_bp.route('/set-language/<lang>')
+def set_language(lang):
+    """언어 설정 변경"""
+    supported = current_app.config.get('BABEL_SUPPORTED_LOCALES', ['ko', 'en'])
+    if lang not in supported:
+        lang = 'ko'
+
+    # 이전 페이지로 리다이렉트
+    referrer = request.referrer or url_for('views.index')
+    response = make_response(redirect(referrer))
+    # 1년간 쿠키 유지
+    response.set_cookie('locale', lang, max_age=365*24*60*60, httponly=False, samesite='Lax')
+    return response
 
 
 @views_bp.route('/')
@@ -48,3 +63,22 @@ def upload():
 def health_check():
     """헬스 체크 엔드포인트"""
     return {'status': 'healthy', 'version': '2.0.0'}
+
+
+# ===== Legal 페이지 =====
+@views_bp.route('/legal/privacy')
+def privacy_policy():
+    """개인정보 처리방침"""
+    return render_template('pages/legal/privacy.html')
+
+
+@views_bp.route('/legal/terms')
+def terms_of_service():
+    """이용약관"""
+    return render_template('pages/legal/terms.html')
+
+
+@views_bp.route('/legal/consent')
+def consent_form():
+    """동의서 다운로드"""
+    return render_template('pages/legal/consent.html')
