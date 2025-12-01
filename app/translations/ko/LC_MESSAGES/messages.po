@@ -170,6 +170,14 @@ msgid "학급 코드가 복사되었습니다."
 msgstr ""
 
 #: app/templates/base.html:296
+msgid "참여 링크가 복사되었습니다."
+msgstr ""
+
+#: app/templates/pages/teacher_dashboard.html:152
+msgid "링크 복사"
+msgstr ""
+
+#: app/templates/base.html:297
 msgid "정말 이 학급을 삭제하시겠습니까?"
 msgstr ""
 

@@ -146,7 +146,15 @@
                         {{ _('복사') }}
                     </button>
                 </div>
-                <p class="text-white/40 text-xs mt-2">{{ _('참여 URL:') }} <span id="join-url"></span></p>
+                <div class="flex items-center gap-2 mt-2">
+                    <span class="text-white/40 text-xs">{{ _('참여 URL:') }}</span>
+                    <span id="join-url" class="text-white/60 text-xs"></span>
+                    <button onclick="copyJoinUrl()" class="text-primary-300 hover:text-primary-200 p-1" title="{{ _('링크 복사') }}">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/>
+                        </svg>
+                    </button>
+                </div>
             </div>
 
             <!-- 학생 명단 업로드 -->
@@ -274,6 +282,23 @@ document.getElementById('create-form').addEventListener('submit', async function
 function copyCode(code) {
     navigator.clipboard.writeText(code).then(() => {
         showToast(t('js.classroom.code_copied'), 'success');
+    });
+}
+
+// 참여 URL 복사
+function copyJoinUrl() {
+    const joinUrl = document.getElementById('join-url').textContent;
+    navigator.clipboard.writeText(joinUrl).then(() => {
+        showToast(t('js.classroom.link_copied'), 'success');
+    }).catch(err => {
+        // 폴백: 구형 브라우저
+        const textarea = document.createElement('textarea');
+        textarea.value = joinUrl;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        showToast(t('js.classroom.link_copied'), 'success');
     });
 }
 
